@@ -133,7 +133,7 @@ function initMap() {
 
   // Create a "highlighted location" marker color for when the user
   // mouses over the marker.
-  var highlightedIcon = makeMarkerIcon("FFFF24");
+  var highlightedIcon = makeMarkerIcon("9400D3");
 
   // The following group uses the location array to create an array of markers on initialize.
   for (var i = 0; i < locations.length; i++) {
@@ -171,10 +171,20 @@ function initMap() {
     listItem.append(listLink)
     // listItem.innerHTML = markers[i].title;
     markersList.push(listItem);
-    console.log(listItem);
-    listItem.addEventListener("click", function(marker) {
+    // console.log(listItem);
+    listLink.addEventListener("click", function(marker) {
       return function() {
         populateInfoWindow(marker, largeInfowindow);
+      };
+    }(marker));
+    listLink.addEventListener("mouseover", function(marker) {
+      return function() {
+        marker.setIcon(highlightedIcon);
+      };
+    }(marker));
+    listLink.addEventListener("mouseout", function(marker) {
+      return function() {
+        marker.setIcon(defaultIcon);
       };
     }(marker));
     
