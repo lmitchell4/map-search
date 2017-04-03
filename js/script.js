@@ -166,7 +166,10 @@ function initMap() {
     // Show the same info window whether the marker is clicked or the 
     // list item is clicked.
     var listItem = document.createElement('li');
-    listItem.innerHTML = markers[i].title;
+    var listLink = document.createElement('a');
+    listLink.innerHTML = markers[i].title;
+    listItem.append(listLink)
+    // listItem.innerHTML = markers[i].title;
     markersList.push(listItem);
     console.log(listItem);
     listItem.addEventListener("click", function(marker) {

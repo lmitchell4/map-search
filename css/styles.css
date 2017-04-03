@@ -114,8 +114,9 @@ hr {
   width: 24%;
 }
 
-#listings-list li:hover {
+#listings-list a:hover {
   cursor: pointer;
   cursor: hand;
   color: #583fd7;
+   text-decoration: none;
 }
