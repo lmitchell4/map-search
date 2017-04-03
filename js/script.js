@@ -211,6 +211,8 @@ function initMap() {
     polygon.getPath().addListener("set_at", searchWithinPolygon);
     polygon.getPath().addListener("insert_at", searchWithinPolygon);
   });
+  
+  showListings();
 }
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
