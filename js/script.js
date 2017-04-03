@@ -598,7 +598,8 @@ document.addEventListener('DOMContentLoaded', function () {
     js_file.type = 'text/javascript';
     js_file.async = true;
     js_file.defer = true;
-    js_file.src = 'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=&callback=initMap&language=' + lang;
+    js_file.src = 'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=' + 
+                    maps_api_key + '&callback=initMap&language=' + lang;
     document.getElementsByTagName('head')[0].appendChild(js_file);
   }
 });
