@@ -172,7 +172,7 @@ function initMap() {
       this.setIcon(defaultIcon);
     });
   }
-  document.getElementById("show-listings").addEventListener("click", showListings);
+  document.getElementById("show-listings").addEventListener("click", showMarkers);
 
   document.getElementById("hide-listings").addEventListener("click", function() {
     hideMarkers(markers);
@@ -269,8 +269,27 @@ function populateInfoWindow(marker, infowindow) {
   }
 }
 
-// This function will loop through the markers array and display them all.
+// This function will loop through the markers array and display them in 
+// a list.
 function showListings() {
+  var bounds = new google.maps.LatLngBounds();
+  // Extend the boundaries of the map for each marker and display the marker
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+    bounds.extend(markers[i].position);
+  }
+  map.fitBounds(bounds);
+}
+
+// This function will loop through the list of listings and hide them all.
+function hideListings(markers) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
+  }
+}
+
+// This function will loop through the markers array and display them all.
+function showMarkers() {
   var bounds = new google.maps.LatLngBounds();
   // Extend the boundaries of the map for each marker and display the marker
   for (var i = 0; i < markers.length; i++) {
@@ -778,7 +797,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // this.setIcon(defaultIcon);
     // });
   // }
-  // document.getElementById("show-listings").addEventListener("click", showListings);
+  // document.getElementById("show-listings").addEventListener("click", showMarkers);
 
   // document.getElementById("hide-listings").addEventListener("click", function() {
     // hideMarkers(markers);
@@ -876,7 +895,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // }
 
 // // This function will loop through the markers array and display them all.
-// function showListings() {
+// function showMarkers() {
   // var bounds = new google.maps.LatLngBounds();
   // // Extend the boundaries of the map for each marker and display the marker
   // for (var i = 0; i < markers.length; i++) {

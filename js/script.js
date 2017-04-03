@@ -2,6 +2,7 @@ var map;
 
 // Create a new blank array for all the listing markers.
 var markers = [];
+var markersList = [];
 
 // This global polygon variable is to ensure only ONE polygon is rendered.
 var polygon = null;
@@ -161,6 +162,19 @@ function initMap() {
     marker.addListener("mouseout", function() {
       this.setIcon(defaultIcon);
     });
+
+    // Show the same info window whether the marker is clicked or the 
+    // list item is clicked.
+    var listItem = document.createElement('li');
+    listItem.innerHTML = markers[i].title;
+    markersList.push(listItem);
+    console.log(listItem);
+    listItem.addEventListener("click", function(marker) {
+      return function() {
+        populateInfoWindow(marker, largeInfowindow);
+      };
+    }(marker));
+    
   }
   document.getElementById("show-listings").addEventListener("click", showListings);
 
@@ -261,13 +275,17 @@ function populateInfoWindow(marker, infowindow) {
   }
 }
 
-// This function will loop through the markers array and display them all.
+// This function will loop through the markers array and display them all 
+// on the map and in the list.
 function showListings() {
+  var listingsList = $("#listings-list");
   var bounds = new google.maps.LatLngBounds();
   // Extend the boundaries of the map for each marker and display the marker
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(map);
     bounds.extend(markers[i].position);
+
+    listingsList.append(markersList[i]);    
   }
   map.fitBounds(bounds);
 }
