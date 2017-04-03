@@ -4,6 +4,8 @@ var map;
 var markers = [];
 var markersList = [];
 
+var timer;
+
 // This global polygon variable is to ensure only ONE polygon is rendered.
 var polygon = null;
 
@@ -152,6 +154,12 @@ function initMap() {
     markers.push(marker);
     // Create an onclick event to open the large infowindow at each marker.
     marker.addListener("click", function() {
+      var self = this;
+      this.setAnimation(google.maps.Animation.BOUNCE);
+      clearTimeout(timer);
+      timer = setTimeout(function() {
+        self.setAnimation(null);
+      }, 750);
       populateInfoWindow(this, largeInfowindow);
     });
     // Two event listeners - one for mouseover, one for mouseout,
@@ -174,6 +182,11 @@ function initMap() {
     // console.log(listItem);
     listLink.addEventListener("click", function(marker) {
       return function() {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+          marker.setAnimation(null);
+        }, 750);
         populateInfoWindow(marker, largeInfowindow);
       };
     }(marker));
