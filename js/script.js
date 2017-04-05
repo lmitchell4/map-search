@@ -1,8 +1,9 @@
+
 var map;
 
 // Create a new blank array for all the listing markers.
 var markers = [];
-var markersList = [];
+var markersList = ko.observableArray([]);
 
 var timer;
 
@@ -105,17 +106,9 @@ function initMap() {
   // Bias the searchbox to within the bounds of the map.
   searchBox.setBounds(map.getBounds());
 
-  // These are the real estate listings that will be shown to the user.
-  // Normally we'd have these in a database instead.
-  var locations = [
-    {title: "Park Ave Penthouse", location: {lat: 40.7713024, lng: -73.9632393}},
-    {title: "Chelsea Loft", location: {lat: 40.7444883, lng: -73.9949465}},
-    {title: "Union Square Open Floor Plan", location: {lat: 40.7347062, lng: -73.9895759}},
-    {title: "East Village Hip Studio", location: {lat: 40.7281777, lng: -73.984377}},
-    {title: "TriBeCa Artsy Bachelor Pad", location: {lat: 40.7195264, lng: -74.0089934}},
-    {title: "Chinatown Homey Space", location: {lat: 40.7180628, lng: -73.9961237}}
-  ];
 
+  var locations = myViewModel.getLocations();
+  
   var largeInfowindow = new google.maps.InfoWindow();
 
   // Initialize the drawing manager.
@@ -133,9 +126,9 @@ function initMap() {
   // Style the markers a bit. This will be our listing marker icon.
   var defaultIcon = makeMarkerIcon("0091ff");
 
-  // Create a "highlighted location" marker color for when the user
-  // mouses over the marker.
-  var highlightedIcon = makeMarkerIcon("9400D3");
+  // // // Create a "highlighted location" marker color for when the user
+  // // // mouses over the marker.
+  // // var highlightedIcon = makeMarkerIcon("9400D3");
 
   // The following group uses the location array to create an array of markers on initialize.
   for (var i = 0; i < locations.length; i++) {
@@ -152,55 +145,23 @@ function initMap() {
     });
     // Push the marker to our array of markers.
     markers.push(marker);
+    
+    // "These events may look like standard DOM events, but they are actually 
+    //  part of the Maps JavaScript API."
+
     // Create an onclick event to open the large infowindow at each marker.
-    marker.addListener("click", function() {
-      var self = this;
-      this.setAnimation(google.maps.Animation.BOUNCE);
-      clearTimeout(timer);
-      timer = setTimeout(function() {
-        self.setAnimation(null);
-      }, 750);
-      populateInfoWindow(this, largeInfowindow);
-    });
+    marker.addListener("click", clickMarker);
+    
     // Two event listeners - one for mouseover, one for mouseout,
     // to change the colors back and forth.
-    marker.addListener("mouseover", function() {
-      this.setIcon(highlightedIcon);
-    });
-    marker.addListener("mouseout", function() {
-      this.setIcon(defaultIcon);
-    });
-
-    // Show the same info window whether the marker is clicked or the 
-    // list item is clicked.
-    var listItem = document.createElement('li');
-    var listLink = document.createElement('a');
-    listLink.innerHTML = markers[i].title;
-    listItem.append(listLink)
-    // listItem.innerHTML = markers[i].title;
-    markersList.push(listItem);
-    // console.log(listItem);
-    listLink.addEventListener("click", function(marker) {
-      return function() {
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-        clearTimeout(timer);
-        timer = setTimeout(function() {
-          marker.setAnimation(null);
-        }, 750);
-        populateInfoWindow(marker, largeInfowindow);
-      };
-    }(marker));
-    listLink.addEventListener("mouseover", function(marker) {
-      return function() {
-        marker.setIcon(highlightedIcon);
-      };
-    }(marker));
-    listLink.addEventListener("mouseout", function(marker) {
-      return function() {
-        marker.setIcon(defaultIcon);
-      };
-    }(marker));
+    marker.addListener("mouseover", highlightMarker);
+    marker.addListener("mouseout", unhighlightMarker);
     
+    markersList.push( {
+      title: marker.title,
+      marker_id: marker.id
+    } ); 
+
   }
   document.getElementById("show-listings").addEventListener("click", showListings);
 
@@ -255,6 +216,33 @@ function initMap() {
   showListings();
 }
 
+
+
+function clickMarker(marker, infowindow) {
+  // Get marker corresponding to the selected item.
+  marker.setAnimation(google.maps.Animation.BOUNCE);
+  clearTimeout(timer);
+  timer = setTimeout(function() {
+    marker.setAnimation(null);
+  }, 750);
+  populateInfoWindow(marker, infowindow);
+};
+
+
+function highlightMarker(marker) {
+  // Create a "highlighted location" marker color for when the user
+  // mouses over the marker.
+  var highlightedIcon = makeMarkerIcon("9400D3");
+  marker.setIcon(highlightedIcon);
+};
+
+function unhighlightMarker(marker) {
+  // Style the markers a bit. This will be our listing marker icon.
+  var defaultIcon = makeMarkerIcon("0091ff");
+  marker.setIcon(defaultIcon);
+};
+
+
 // This function populates the infowindow when the marker is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
@@ -304,14 +292,11 @@ function populateInfoWindow(marker, infowindow) {
 // This function will loop through the markers array and display them all 
 // on the map and in the list.
 function showListings() {
-  var listingsList = $("#listings-list");
   var bounds = new google.maps.LatLngBounds();
   // Extend the boundaries of the map for each marker and display the marker
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(map);
     bounds.extend(markers[i].position);
-
-    listingsList.append(markersList[i]);    
   }
   map.fitBounds(bounds);
 }
@@ -633,6 +618,66 @@ function getPlacesDetails(marker, infowindow) {
 
 
 
+var ViewModel = function() {
+  var self = this;
+  
+  // self.currentPlace = ko.observable();
+  
+  // self.updateCurrentPlace = function(clickedPlace) {
+    // console.log(clickedPlace);
+    // self.currentPlace(clickedPlace);
+  // }
+  
+  
+  // Show the same info window whether the marker is clicked or the 
+  // list item is clicked.
+  self.clickListItem = function(clickedListItem) {  
+    var largeInfowindow = new google.maps.InfoWindow();
+    var marker = markers[clickedListItem.marker_id];
+    clickMarker(marker, largeInfowindow);
+  };
+  
+  self.mouseOverListItem = function(mousedOverListItem) {
+    var marker = markers[mousedOverListItem.marker_id];
+    highlightMarker(marker);
+  };
+  
+  self.mouseOutListItem = function(mousedOutListItem) {
+    var marker = markers[mousedOutListItem.marker_id];
+    unhighlightMarker(marker);
+  }; 
+
+  
+  // self.incrementCounter = function() {
+    // // this.currentCat().clickCount(this.currentCat().clickCount() + 1);
+    // self.currentCat().clickCount(self.currentCat().clickCount() + 1);
+  // };
+  
+  // These are the real estate listings that will be shown to the user.
+  // Normally we'd have these in a database instead.  
+  self.locations = [
+    {title: "Park Ave Penthouse", location: {lat: 40.7713024, lng: -73.9632393}},
+    {title: "Chelsea Loft", location: {lat: 40.7444883, lng: -73.9949465}},
+    {title: "Union Square Open Floor Plan", location: {lat: 40.7347062, lng: -73.9895759}},
+    {title: "East Village Hip Studio", location: {lat: 40.7281777, lng: -73.984377}},
+    {title: "TriBeCa Artsy Bachelor Pad", location: {lat: 40.7195264, lng: -74.0089934}},
+    {title: "Chinatown Homey Space", location: {lat: 40.7180628, lng: -73.9961237}}
+  ];
+
+  self.getLocations = function() {
+    return self.locations;
+  };
+  
+  self.markersList = markersList;
+}
+
+var myViewModel = new ViewModel();
+ko.applyBindings(myViewModel);
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {  
   if(document.querySelectorAll('#map').length > 0) {
     if (document.querySelector('html').lang)
@@ -647,6 +692,7 @@ document.addEventListener('DOMContentLoaded', function () {
     js_file.src = 'https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=' + 
                     maps_api_key + '&callback=initMap&language=' + lang;
     document.getElementsByTagName('head')[0].appendChild(js_file);
+    
   }
 });
 
