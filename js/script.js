@@ -244,18 +244,19 @@ function clickMarker(marker, infowindow) {
 };
 
 
-function highlightMarker(marker) {
+function highlightMarker() {
   // Create a "highlighted location" marker color for when the user
   // mouses over the marker.
   var highlightedIcon = makeMarkerIcon("9400D3");
-  marker.setIcon(highlightedIcon);
+  this.setIcon(highlightedIcon);
 };
 
-function unhighlightMarker(marker) {
+function unhighlightMarker() {
   // Style the markers a bit. This will be our listing marker icon.
   var defaultIcon = makeMarkerIcon("0091ff");
-  marker.setIcon(defaultIcon);
+  this.setIcon(defaultIcon);
 };
+
 
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
@@ -633,9 +634,31 @@ function getPlacesDetails(marker, infowindow) {
 
 
 
+
+var ListView = function(locations, markers) {
+  var self = this;
+  self.filterCriteria = ko.observable("");
+  self.locations = ko.observableArray(locations);
+  self.filteredLocations = ko.computed(function() {
+    var filter = self.filterCriteria().toLowerCase();
+    
+    if(!filter) {
+      return self.locationsOA;
+    } else {
+      return ko.utils.arrayFilter(self.locations(), function(loc) {
+        var match = stringStartsWith(loc.title.toLowerCase(), filter);
+        loc.marker.setVisible(match);
+        return match;
+      });
+    }
+  });
+}
+
+
+
 var ViewModel = function() {
   var self = this;
-  
+
   // Show the same info window whether the marker is clicked or the 
   // list item is clicked.
   self.clickListItem = function(clickedListItem) {  
@@ -646,12 +669,12 @@ var ViewModel = function() {
   
   self.mouseOverListItem = function(mousedOverListItem) {
     var marker = markers[mousedOverListItem.marker_id];
-    highlightMarker(marker);
+    marker.highlightMarker();
   };
   
   self.mouseOutListItem = function(mousedOutListItem) {
     var marker = markers[mousedOutListItem.marker_id];
-    unhighlightMarker(marker);
+    marker.unhighlightMarker();
   };
 
   self.getLocations = function() {
@@ -661,6 +684,7 @@ var ViewModel = function() {
   self.markersList = markersList;
 }
 
+var myListView = new ListView();
 var myViewModel = new ViewModel();
 ko.applyBindings(myViewModel);
 
