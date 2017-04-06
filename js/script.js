@@ -669,12 +669,14 @@ var ViewModel = function() {
   
   self.mouseOverListItem = function(mousedOverListItem) {
     var marker = markers[mousedOverListItem.marker_id];
-    marker.highlightMarker();
+    var highlightedIcon = makeMarkerIcon("9400D3");
+    marker.setIcon(highlightedIcon);
   };
   
   self.mouseOutListItem = function(mousedOutListItem) {
     var marker = markers[mousedOutListItem.marker_id];
-    marker.unhighlightMarker();
+    var defaultIcon = makeMarkerIcon("0091ff");
+    marker.setIcon(defaultIcon);
   };
 
   self.getLocations = function() {
