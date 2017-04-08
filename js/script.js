@@ -18,7 +18,7 @@ var map;
 
 // Create a new blank array for all the listing markers.
 var markers = [];
-var markersList = ko.observableArray([]);
+var allLocations = ko.observableArray([]);
 
 var timer;
 
@@ -172,7 +172,7 @@ function initMap() {
     marker.addListener("mouseover", highlightMarker);
     marker.addListener("mouseout", unhighlightMarker);
     
-    markersList.push( {
+    allLocations.push( {
       title: marker.title,
       marker_id: marker.id
     } ); 
@@ -635,24 +635,24 @@ function getPlacesDetails(marker, infowindow) {
 
 
 
-var ListView = function(locations, markers) {
-  var self = this;
-  self.filterCriteria = ko.observable("");
-  self.locations = ko.observableArray(locations);
-  self.filteredLocations = ko.computed(function() {
-    var filter = self.filterCriteria().toLowerCase();
+// var ListView = function(locations, markers) {
+  // var self = this;
+  // self.filterCriteria = ko.observable("");
+  // self.locationsOA = ko.observableArray(locations);
+  // self.filteredLocations = ko.computed(function() {
+    // var filter = self.filterCriteria().toLowerCase();
     
-    if(!filter) {
-      return self.locationsOA;
-    } else {
-      return ko.utils.arrayFilter(self.locations(), function(loc) {
-        var match = stringStartsWith(loc.title.toLowerCase(), filter);
-        loc.marker.setVisible(match);
-        return match;
-      });
-    }
-  });
-}
+    // if(!filter) {
+      // return self.locationsOA;
+    // } else {
+      // return ko.utils.arrayFilter(self.locations(), function(loc) {
+        // var match = stringStartsWith(loc.title.toLowerCase(), filter);
+        // loc.marker.setVisible(match);
+        // return match;
+      // });
+    // }
+  // });
+// }
 
 
 
@@ -683,37 +683,34 @@ var ViewModel = function() {
     return model.locations;
   };
   
-  self.markersList = markersList;
+  self.allLocations = allLocations;
   
   
 
+  
+  
+  
+  
 
   self.filterCriteria = ko.observable("");
   self.filteredLocations = ko.computed(function() {
-    var filter = self.filterCriteria().toLowerCase();
+    var filter = self.filterCriteria();
     
     if(!filter) {
-      return self.locationsOA;
+      self.allLocations().forEach(function(loc) {
+        markers[loc.marker_id].setVisible(true);
+      });
+      return self.allLocations();
+      
     } else {
-      return ko.utils.arrayFilter(self.markersList(), function(loc) {
-        var match = ko.util.stringStartsWith(loc.title.toLowerCase(), filter);
-        loc.marker.setVisible(match);
+      return ko.utils.arrayFilter(self.allLocations(), function(loc) {
+        var re = new RegExp(filter, "i");
+        var match = re.test(loc.title);
+        markers[loc.marker_id].setVisible(match);
         return match;
       });
     }
   });
-  
-  
-  self.
-  
-  var stringStartsWith = function (string, startsWith) {          
-    string = string || "";
-    if (startsWith.length > string.length)
-        return false;
-    return string.substring(0, startsWith.length) === startsWith;
-};
-rename markersList
-don't check startswith
 
 
 
