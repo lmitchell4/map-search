@@ -121,10 +121,7 @@ function initMap() {
   // Bias the searchbox to within the bounds of the map.
   searchBox.setBounds(map.getBounds());
 
-
   var locations = myViewModel.getLocations();
-  
-  var largeInfowindow = new google.maps.InfoWindow();
 
   // Initialize the drawing manager.
   var drawingManager = new google.maps.drawing.DrawingManager({
@@ -165,12 +162,12 @@ function initMap() {
     //  part of the Maps JavaScript API."
 
     // Create an onclick event to open the large infowindow at each marker.
-    marker.addListener("click", clickMarker);
+    marker.addListener("click", function() {clickMarker(this)});
     
     // Two event listeners - one for mouseover, one for mouseout,
     // to change the colors back and forth.
-    marker.addListener("mouseover", highlightMarker);
-    marker.addListener("mouseout", unhighlightMarker);
+    marker.addListener("mouseover", function() {highlightMarker(this)});
+    marker.addListener("mouseout", function() {unhighlightMarker(this)});
     
     allLocations.push( {
       title: marker.title,
@@ -233,28 +230,29 @@ function initMap() {
 
 
 
-function clickMarker(marker, infowindow) {
-  // Get marker corresponding to the selected item.
+function clickMarker(marker) {
+  var largeInfowindow = new google.maps.InfoWindow();
+  
   marker.setAnimation(google.maps.Animation.BOUNCE);
   clearTimeout(timer);
   timer = setTimeout(function() {
     marker.setAnimation(null);
   }, 750);
-  populateInfoWindow(marker, infowindow);
+  populateInfoWindow(marker, largeInfowindow);
 };
 
 
-function highlightMarker() {
+function highlightMarker(marker) {
   // Create a "highlighted location" marker color for when the user
   // mouses over the marker.
   var highlightedIcon = makeMarkerIcon("9400D3");
-  this.setIcon(highlightedIcon);
+  marker.setIcon(highlightedIcon);
 };
 
-function unhighlightMarker() {
+function unhighlightMarker(marker) {
   // Style the markers a bit. This will be our listing marker icon.
   var defaultIcon = makeMarkerIcon("0091ff");
-  this.setIcon(defaultIcon);
+  marker.setIcon(defaultIcon);
 };
 
 
@@ -662,21 +660,18 @@ var ViewModel = function() {
   // Show the same info window whether the marker is clicked or the 
   // list item is clicked.
   self.clickListItem = function(clickedListItem) {  
-    var largeInfowindow = new google.maps.InfoWindow();
     var marker = markers[clickedListItem.marker_id];
-    clickMarker(marker, largeInfowindow);
+    clickMarker(marker);
   };
   
   self.mouseOverListItem = function(mousedOverListItem) {
     var marker = markers[mousedOverListItem.marker_id];
-    var highlightedIcon = makeMarkerIcon("9400D3");
-    marker.setIcon(highlightedIcon);
+    highlightMarker(marker);
   };
   
   self.mouseOutListItem = function(mousedOutListItem) {
     var marker = markers[mousedOutListItem.marker_id];
-    var defaultIcon = makeMarkerIcon("0091ff");
-    marker.setIcon(defaultIcon);
+    unhighlightMarker(marker);
   };
 
   self.getLocations = function() {
@@ -687,8 +682,6 @@ var ViewModel = function() {
   
   
 
-  
-  
   
   
 
@@ -716,7 +709,7 @@ var ViewModel = function() {
 
 }
 
-var myListView = new ListView();
+// var myListView = new ListView();
 var myViewModel = new ViewModel();
 ko.applyBindings(myViewModel);
 
