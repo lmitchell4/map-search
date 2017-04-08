@@ -684,6 +684,39 @@ var ViewModel = function() {
   };
   
   self.markersList = markersList;
+  
+  
+
+
+  self.filterCriteria = ko.observable("");
+  self.filteredLocations = ko.computed(function() {
+    var filter = self.filterCriteria().toLowerCase();
+    
+    if(!filter) {
+      return self.locationsOA;
+    } else {
+      return ko.utils.arrayFilter(self.markersList(), function(loc) {
+        var match = ko.util.stringStartsWith(loc.title.toLowerCase(), filter);
+        loc.marker.setVisible(match);
+        return match;
+      });
+    }
+  });
+  
+  
+  self.
+  
+  var stringStartsWith = function (string, startsWith) {          
+    string = string || "";
+    if (startsWith.length > string.length)
+        return false;
+    return string.substring(0, startsWith.length) === startsWith;
+};
+rename markersList
+don't check startswith
+
+
+
 }
 
 var myListView = new ListView();

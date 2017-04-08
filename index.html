@@ -18,6 +18,8 @@
       <div class="options-box">
         <h1>Find Your New NYC Home</h1>
         <div>
+          <input data-bind="textInput: filterCriteria" id="filter-input" type="text" value=""/>
+          <input id="filter-listings" type="button" value="Filter Listings"/>
           <ul data-bind="foreach: markersList" id="listings-list">
             <!-- <li><a data-bind="text: $data.name, click: $parent.updateCurrentCat"></a></li> -->
             <li><a data-bind="text: $data.title, click: $parent.clickListItem, event: { mouseover: $parent.mouseOverListItem, mouseout: $parent.mouseOutListItem }"></a></li>
@@ -34,7 +36,6 @@
       <!-- <li data-bind="text: nickName"></li> -->
     <!-- </ul> -->
   <!-- </div> -->
-          <input id="filter-listings" type="button" value="Filter Listings">
           <input id="show-listings" type="button" value="Show Listings">
           <input id="hide-listings" type="button" value="Hide Listings">
           <hr>
