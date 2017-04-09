@@ -8,6 +8,23 @@ html, body {
   height: 100%;
 }
 
+#filter-div {
+  text-align: center;
+  height: 40px;
+}
+
+#filter-input {
+  width: calc(100% - 70px);
+}
+
+#filter-label {
+  display: inline;
+  width: 70px;
+  color: #029bc9;
+  /* color: #fff; */
+  /* background: #029bc9; */
+}
+
 
 
 

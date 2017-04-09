@@ -19,9 +19,8 @@
         <h1>Find Your New NYC Home</h1>
         <div>
           <input data-bind="textInput: filterCriteria" id="filter-input" type="text" value=""/>
-          <input id="filter-listings" type="button" value="Filter Listings"/>
-          <ul data-bind="foreach: markersList" id="listings-list">
-            <!-- <li><a data-bind="text: $data.name, click: $parent.updateCurrentCat"></a></li> -->
+          <p id="filter-label">Filter</p>
+          <ul data-bind="foreach: filteredLocations" id="listings-list">
             <li><a data-bind="text: $data.title, click: $parent.clickListItem, event: { mouseover: $parent.mouseOverListItem, mouseout: $parent.mouseOutListItem }"></a></li>
           </ul>
   <!-- <div data-bind="with: currentCat()" id="cat"> -->
