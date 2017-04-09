@@ -280,16 +280,87 @@ function populateInfoWindow(marker, infowindow) {
         var nearStreetViewLocation = data.location.latLng;
         var heading = google.maps.geometry.spherical.computeHeading(
           nearStreetViewLocation, marker.position);
-          infowindow.setContent("<div>" + marker.title + "</div><div id='pano'></div>");
-          var panoramaOptions = {
-            position: nearStreetViewLocation,
-            pov: {
-              heading: heading,
-              pitch: 30
-            }
-          };
+          
+        // Set up info window content. 
+        // Additional info gets added in API callbacks.
+        var content = "<div>" + marker.title + "</div>";
+        content += "<div id='pano'></div>";
+        infowindow.setContent(content);
+        
+        // Set up panorma picture:
+        var panoramaOptions = {
+          position: nearStreetViewLocation,
+          pov: {
+            heading: heading,
+            pitch: 30
+          }
+        };
         var panorama = new google.maps.StreetViewPanorama(
           document.getElementById("pano"), panoramaOptions);
+        
+        
+        // Load Wikipedia articles:
+        var wikiRequestTimeout = setTimeout(function() {
+          console.log("Failed to get Wikipedia resources");
+        }, 8000);
+        
+        var srcStr = "cats";
+        $.ajax({
+          url: "http://en.wikipedia.org/w/api.php",
+          data: {
+            action: "query",
+            list: "search",
+            srsearch: srcStr,
+            format: "json"
+          },
+          dataType: "jsonp",
+          // jsonp: "callback",
+          success: function (data) {
+            var articles = data.query.search;
+
+            var items = [];
+            $.each(articles, function(key, article) {
+              // var article_link = document.createElement("a");
+              // article_link.href = "http://en.wikipedia.org/wiki/" + article.title;
+              // article_link.innerHTML = article.title; 
+
+              // var list_item = document.createElement("li");
+              // list_item.appendChild(article_link);
+              // items.push(list_item);
+              
+              var article_link = $("<a></a>");
+              article_link.attr("href", "http://en.wikipedia.org/wiki/" + article.title);
+              article_link.text(article.title); 
+              
+              var list_item = $("<li></li>");
+              list_item.append(article_link);
+              items.push(list_item);
+            });
+
+            var final_list = items.join("");
+            if(items.length > 0) {
+              // var wiki_title = document.createElement("p");
+              // wiki_title.textContent = "Check out these Wikipedia articles:";
+              // var wiki_list = "<ul id='wiki-links'></ul>";
+
+              // document.getElementById("wiki-links").appendChild(wiki_title);
+              // document.getElementById("wiki-links").appendChild(items[0]);
+              // document.getElementById("wiki-links").appendChild(items[1]);
+              
+              var $wiki = $("<p id='wiki-intro'>Check out these Wikipedia articles:</p>" + 
+                            "<ul id='wiki-links'></ul>");
+              $("#pano").after($wiki);
+
+              $("#wiki-links").append(items[0]);
+              $("#wiki-links").append(items[1]);
+            }
+// // http://stackoverflow.com/questions/4772774/how-do-i-create-a-link-using-javascript
+
+            clearTimeout(wikiRequestTimeout);
+          }
+        });
+
+    
       } else {
         infowindow.setContent("<div>" + marker.title + "</div>" +
           "<div>No Street View Found</div>");
