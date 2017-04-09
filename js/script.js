@@ -1,14 +1,20 @@
 
 var model = {
-  // These are the real estate listings that will be shown to the user.
+  // These are the place listings that will be shown to the user.
   // Normally we'd have these in a database instead.  
   locations: [
-    {title: "Park Ave Penthouse", location: {lat: 40.7713024, lng: -73.9632393}},
-    {title: "Chelsea Loft", location: {lat: 40.7444883, lng: -73.9949465}},
-    {title: "Union Square Open Floor Plan", location: {lat: 40.7347062, lng: -73.9895759}},
-    {title: "East Village Hip Studio", location: {lat: 40.7281777, lng: -73.984377}},
-    {title: "TriBeCa Artsy Bachelor Pad", location: {lat: 40.7195264, lng: -74.0089934}},
-    {title: "Chinatown Homey Space", location: {lat: 40.7180628, lng: -73.9961237}}
+    {title: "Shedd Aquarium", location: {lat: 41.8676217, lng: -87.6136616}},
+    // {title: "Brookfield Zoo", location: {lat: 41.8350288, lng: -87.83363030000001}},
+    {title: "Lincoln Park Zoo", location: {lat: 41.9187897, lng: -87.635465}},
+    // {title: "Museum of Science and Industry", location: {lat: 41.7906088, lng: -87.5830586}},
+    {title: "Field Museum of Natural History", location: {lat: 41.8661733, lng: -87.61698620000001}},
+    {title: "Art Institute of Chicago", location: {lat: 41.8806822, lng: -87.6242154}},
+    // {title: "National Museum of Mexican Art", location: {lat: 41.8561698, lng: -87.6729641}},
+    // {title: "Chicago History Museum", location: {lat: 41.9119691, lng: -87.6315025}},
+    // {title: "International Museum of Surgical Science", location: {lat: 41.910275, lng: -87.62661969999999}},
+    {title: "Adler Planetarium", location: {lat: 41.8663557, lng: -87.60661159999999}},
+    // {title: "Soldier Field", location: {lat: 41.8622646, lng: -87.61663820000001}},
+    {title: "Wrigley Field", location: {lat: 41.9474536, lng: -87.6561341}}
   ]
 }
 
