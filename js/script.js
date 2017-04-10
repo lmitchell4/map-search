@@ -293,6 +293,8 @@ function populateInfoWindow(marker, infowindow) {
         // Additional info gets added in API callbacks.
         var content = "<div>" + marker.title + "</div>";
         content += "<div id='pano'></div>";
+        content += "<div id='wiki'></div>";
+        content += "<div id='flickr'></div>";
         infowindow.setContent(content);
         
         // Set up panorma picture:
@@ -307,12 +309,17 @@ function populateInfoWindow(marker, infowindow) {
           document.getElementById("pano"), panoramaOptions);
         
         
+        
+        var srcStr = marker.title;
+        
+
+// // http://stackoverflow.com/questions/4772774/how-do-i-create-a-link-using-javascript
+        
         // Load Wikipedia articles:
         var wikiRequestTimeout = setTimeout(function() {
           console.log("Failed to get Wikipedia resources");
         }, 8000);
         
-        var srcStr = marker.title;
         $.ajax({
           url: "http://en.wikipedia.org/w/api.php",
           data: {
@@ -336,7 +343,7 @@ function populateInfoWindow(marker, infowindow) {
               // list_item.appendChild(article_link);
               // items.push(list_item);
               
-              var article_link = $("<a></a>");
+              var article_link = $("<a target='_blank'></a>");
               article_link.attr("href", "http://en.wikipedia.org/wiki/" + article.title);
               article_link.text(article.title); 
               
@@ -355,14 +362,15 @@ function populateInfoWindow(marker, infowindow) {
               // document.getElementById("wiki-links").appendChild(items[0]);
               // document.getElementById("wiki-links").appendChild(items[1]);
               
-              var $wiki = $("<p id='wiki-intro'>Related Wikipedia articles:</p>" + 
+              var $wiki = $("<p id='wiki-intro'>Related " + 
+                            "<a href='https://www.wikipedia.org/' target='_blank'>" + 
+                            "Wikipedia</a> articles:</p>" + 
                             "<ul id='wiki-links'></ul>");
-              $("#pano").after($wiki);
+              $("#wiki").append($wiki);
 
               $("#wiki-links").append(items[0]);
               $("#wiki-links").append(items[1]);
             }
-// // http://stackoverflow.com/questions/4772774/how-do-i-create-a-link-using-javascript
 
             clearTimeout(wikiRequestTimeout);
           }
@@ -370,6 +378,65 @@ function populateInfoWindow(marker, infowindow) {
 
     
 
+        // Thanks to:
+        // http://kylerush.net/blog/tutorial-flickr-api-javascript-jquery-ajax-json-build-detailed-photo-wall/        
+        // https://www.flickr.com/services/api/misc.urls.html
+        // var flickr_url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=";
+        // flickr_url += flickr_api_key + "&tags=flower&format=json&nojsoncallback=1";
+        
+        // Load flickr images:
+        var flickrRequestTimeout = setTimeout(function() {
+          console.log("Failed to get flickr resources");
+        }, 8000);
+  
+        var flickr_url = "https://api.flickr.com/services/rest/?";
+        $.ajax({
+          url: flickr_url,
+          data: {
+            method: "flickr.photos.search",
+            api_key: flickr_api_key,
+            tags: srcStr,
+            privacy_filter: 1,
+            safe_search: 1,
+            format: "json",
+            nojsoncallback: "1"
+          },
+          // dataType: "jsonp",
+          dataType: "json",
+          success: function (data) {
+            console.log(data);
+            if(data.photos.photo.length > 0) {
+              var $flickr = $("<p>Photos from <a href='https://www.flickr.com/'" + 
+                              "target='_blank'>" + 
+                              "flickr</a>:</p><div id='img-div'></div>");
+              // var $img_div = $("<div id='img-div'></div>");
+              $("#flickr").append($flickr);
+              
+              if(data) {
+                var n = 3;
+                if(data.photos.photo.length < 3) {
+                  n = data.photos.photo.length;
+                }
+                for(var i = 0; i < n; i++) {
+                  var photo = data.photos.photo[i];
+                  var $imglink = $("<a href='http://flickr.com/photos/" + 
+                                  photo.owner + "/" + photo.id + "' target='_blank'></a>");
+                  var $img = $("<img class='flickr-img'>");
+                  $img.attr("src", "https://farm" + photo.farm + 
+                            ".staticflickr.com/" + photo.server + "/" + 
+                            photo.id + "_" + photo.secret + "_t.jpg");
+                  var spacer = $("<span class='hspacer-5'></span>");
+                  $img.after(spacer);
+                  $("#img-div").append($imglink.append($img));
+                  // $("#id").append($imglink.append($img));
+                  console.log(data.photos.photo[i]);
+                }
+              }
+            }
+
+            clearTimeout(flickrRequestTimeout);
+          }
+        });
         
         
 

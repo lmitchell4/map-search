@@ -33,11 +33,17 @@ html, body {
   /* padding-top: -5px; */
 /* } */
 
+/* .flickr-img { */
+  /* margin-right: 5px; */
+/* } */
 
+/* img: last-of-type { */
+  /* margin-right: 0px; */
+/* } */
 
-
-
-
+.hspacer-5 {
+  width: 5px;
+}
 
 
 
