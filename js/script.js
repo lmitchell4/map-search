@@ -8,13 +8,15 @@ var model = {
     {title: "Lincoln Park Zoo", location: {lat: 41.9187897, lng: -87.635465}},
     // {title: "Museum of Science and Industry", location: {lat: 41.7906088, lng: -87.5830586}},
     {title: "Field Museum of Natural History", location: {lat: 41.8661733, lng: -87.61698620000001}},
-    {title: "Art Institute of Chicago", location: {lat: 41.8806822, lng: -87.6242154}},
+    {title: "Art Institute of Chicago", location: {lat: 41.879347, lng: -87.621228}},
     // {title: "National Museum of Mexican Art", location: {lat: 41.8561698, lng: -87.6729641}},
-    // {title: "Chicago History Museum", location: {lat: 41.9119691, lng: -87.6315025}},
-    // {title: "International Museum of Surgical Science", location: {lat: 41.910275, lng: -87.62661969999999}},
+    {title: "Chicago History Museum", location: {lat: 41.9119691, lng: -87.6315025}},
+    {title: "International Museum of Surgical Science", location: {lat: 41.910275, lng: -87.62661969999999}},
     {title: "Adler Planetarium", location: {lat: 41.8663557, lng: -87.60661159999999}},
-    // {title: "Soldier Field", location: {lat: 41.8622646, lng: -87.61663820000001}},
-    {title: "Wrigley Field", location: {lat: 41.9474536, lng: -87.6561341}}
+    // {title: "Museum of Contemporary Art", location: {lat: 41.8972116, lng: -87.62107069999999}},
+    // {title: "Navy Pier", location: {lat: 41.891731, lng: -87.60225869999999}},
+    {title: "Soldier Field", location: {lat: 41.8622646, lng: -87.61663820000001}}
+    // {title: "Wrigley Field", location: {lat: 41.9474536, lng: -87.6561341}}
   ]
 }
 
@@ -310,7 +312,7 @@ function populateInfoWindow(marker, infowindow) {
           console.log("Failed to get Wikipedia resources");
         }, 8000);
         
-        var srcStr = "cats";
+        var srcStr = marker.title;
         $.ajax({
           url: "http://en.wikipedia.org/w/api.php",
           data: {
@@ -353,7 +355,7 @@ function populateInfoWindow(marker, infowindow) {
               // document.getElementById("wiki-links").appendChild(items[0]);
               // document.getElementById("wiki-links").appendChild(items[1]);
               
-              var $wiki = $("<p id='wiki-intro'>Check out these Wikipedia articles:</p>" + 
+              var $wiki = $("<p id='wiki-intro'>Related Wikipedia articles:</p>" + 
                             "<ul id='wiki-links'></ul>");
               $("#pano").after($wiki);
 
@@ -367,6 +369,10 @@ function populateInfoWindow(marker, infowindow) {
         });
 
     
+
+        
+        
+
       } else {
         infowindow.setContent("<div>" + marker.title + "</div>" +
           "<div>No Street View Found</div>");
@@ -731,6 +737,8 @@ function getPlacesDetails(marker, infowindow) {
 
 
 
+
+
 var ViewModel = function() {
   var self = this;
 
@@ -774,6 +782,7 @@ var ViewModel = function() {
       
     } else {
       return ko.utils.arrayFilter(self.allLocations(), function(loc) {
+        // toLowerCase().indexOf(value.toLowerCase()) >= 0) would be simpler
         var re = new RegExp(filter, "i");
         var match = re.test(loc.title);
         markers[loc.marker_id].setVisible(match);
