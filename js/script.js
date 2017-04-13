@@ -292,10 +292,16 @@ function populateInfoWindow(marker, infowindow) {
         // Set up info window content. 
         // Additional info gets added in API callbacks.
         var content = "<div>" + marker.title + "</div>";
-        content += "<div id='pano'></div>";
-        content += "<div id='wiki'></div>";
-        content += "<div id='flickr'></div>";
+        content += "<div id='pano-" + marker.id + "'></div>";
+        content += "<div id='wiki-" + marker.id + "'></div>";
+        content += "<div id='flickr-" + marker.id + "'></div>";
         infowindow.setContent(content);
+        
+        // var content = "<div id='window-content'>" + marker.title + "</div>";
+        // content += "<div id='pano'></div>";
+        // content += "<div id='wiki'></div>";
+        // content += "<div id='flickr'></div>";
+        // infowindow.setContent(content);
         
         // Set up panorma picture:
         var panoramaOptions = {
@@ -306,10 +312,10 @@ function populateInfoWindow(marker, infowindow) {
           }
         };
         var panorama = new google.maps.StreetViewPanorama(
-          document.getElementById("pano"), panoramaOptions);
-        
-        
-        
+          document.getElementById("pano-" + marker.id), panoramaOptions);
+        // var panorama = new google.maps.StreetViewPanorama(
+          // document.getElementById("pano"), panoramaOptions);
+        console.log(document.getElementById("pano-" + marker.id));
         var srcStr = marker.title;
         
 
@@ -362,14 +368,23 @@ function populateInfoWindow(marker, infowindow) {
               // document.getElementById("wiki-links").appendChild(items[0]);
               // document.getElementById("wiki-links").appendChild(items[1]);
               
-              var $wiki = $("<p id='wiki-intro'>Related " + 
+              // var $wiki = $("<p class='wiki-intro'>Related " + 
+                            // "<a href='https://www.wikipedia.org/' target='_blank'>" + 
+                            // "Wikipedia</a> articles:</p>" + 
+                            // "<ul id='wiki-links'></ul>");
+              // $("#wiki").append($wiki);
+
+              // $("#wiki-links").append(items[0]);
+              // $("#wiki-links").append(items[1]);
+              
+              var $wiki = $("<p class='wiki-intro'>Related " + 
                             "<a href='https://www.wikipedia.org/' target='_blank'>" + 
                             "Wikipedia</a> articles:</p>" + 
-                            "<ul id='wiki-links'></ul>");
-              $("#wiki").append($wiki);
-
-              $("#wiki-links").append(items[0]);
-              $("#wiki-links").append(items[1]);
+                            "<ul id='wiki-list-" + marker.id + "'></ul>");
+              $("#wiki-" + marker.id).append($wiki);              
+              var $wiki_list = $("#wiki-list-" + marker.id);
+              $wiki_list.append(items[0]);
+              $wiki_list.append(items[1]);              
             }
 
             clearTimeout(wikiRequestTimeout);
@@ -390,6 +405,7 @@ function populateInfoWindow(marker, infowindow) {
         }, 8000);
   
         var flickr_url = "https://api.flickr.com/services/rest/?";
+        var flickr_photos = [];
         $.ajax({
           url: flickr_url,
           data: {
@@ -404,13 +420,12 @@ function populateInfoWindow(marker, infowindow) {
           // dataType: "jsonp",
           dataType: "json",
           success: function (data) {
-            console.log(data);
             if(data.photos.photo.length > 0) {
               var $flickr = $("<p>Photos from <a href='https://www.flickr.com/'" + 
                               "target='_blank'>" + 
-                              "flickr</a>:</p><div id='img-div'></div>");
+                              "flickr</a>:</p><div id='img-div-" + marker.id + "'></div>");
               // var $img_div = $("<div id='img-div'></div>");
-              $("#flickr").append($flickr);
+              $("#flickr-" + marker.id).append($flickr);
               
               if(data) {
                 var n = 3;
@@ -427,9 +442,12 @@ function populateInfoWindow(marker, infowindow) {
                             photo.id + "_" + photo.secret + "_t.jpg");
                   var spacer = $("<span class='hspacer-5'></span>");
                   $img.after(spacer);
-                  $("#img-div").append($imglink.append($img));
+                  $("#img-div-" + marker.id).append($imglink.append($img));
                   // $("#id").append($imglink.append($img));
-                  console.log(data.photos.photo[i]);
+                  // console.log(data.photos.photo[i]);
+                  console.log(photo.id);
+                  
+                  flickr_photos[i] = photo;
                 }
               }
             }
@@ -439,6 +457,44 @@ function populateInfoWindow(marker, infowindow) {
         });
         
         
+console.log(flickr_photos);
+            $.ajax({
+              url: flickr_url,
+              data: {
+                method: "flickr.photos.getInfo",
+                api_key: flickr_api_key,
+                photo_id: "33890817835" //flickr_photos[0].id
+              },
+              dataType: "json",
+              success: function (data) {
+                console.log(data);
+              },
+              fail: function() {
+                console.log("fail");
+              }
+            });
+            
+                          // $.ajax({
+                            // url: flickr_url,
+                            // data: {
+                              // method: "flickr.photos.getInfo",
+                              // api_key: flickr_api_key,
+                              // photo_id: flickr_photos[0].id
+                            // },
+                            // dataType: "json",
+                            // success: function (data) {
+                              // console.log(data);
+                            // },
+                            // fail: function() {
+                              // console.log("fail");
+                            // }
+                          // });
+
+
+        
+        
+
+
 
       } else {
         infowindow.setContent("<div>" + marker.title + "</div>" +
