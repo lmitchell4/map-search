@@ -341,14 +341,6 @@ function populateInfoWindow(marker, infowindow) {
 
             var items = [];
             $.each(articles, function(key, article) {
-              // var article_link = document.createElement("a");
-              // article_link.href = "http://en.wikipedia.org/wiki/" + article.title;
-              // article_link.innerHTML = article.title; 
-
-              // var list_item = document.createElement("li");
-              // list_item.appendChild(article_link);
-              // items.push(list_item);
-              
               var article_link = $("<a target='_blank'></a>");
               article_link.attr("href", "http://en.wikipedia.org/wiki/" + article.title);
               article_link.text(article.title); 
@@ -360,23 +352,6 @@ function populateInfoWindow(marker, infowindow) {
 
             var final_list = items.join("");
             if(items.length > 0) {
-              // var wiki_title = document.createElement("p");
-              // wiki_title.textContent = "Check out these Wikipedia articles:";
-              // var wiki_list = "<ul id='wiki-links'></ul>";
-
-              // document.getElementById("wiki-links").appendChild(wiki_title);
-              // document.getElementById("wiki-links").appendChild(items[0]);
-              // document.getElementById("wiki-links").appendChild(items[1]);
-              
-              // var $wiki = $("<p class='wiki-intro'>Related " + 
-                            // "<a href='https://www.wikipedia.org/' target='_blank'>" + 
-                            // "Wikipedia</a> articles:</p>" + 
-                            // "<ul id='wiki-links'></ul>");
-              // $("#wiki").append($wiki);
-
-              // $("#wiki-links").append(items[0]);
-              // $("#wiki-links").append(items[1]);
-              
               var $wiki = $("<p class='wiki-intro'>Related " + 
                             "<a href='https://www.wikipedia.org/' target='_blank'>" + 
                             "Wikipedia</a> articles:</p>" + 
@@ -424,7 +399,6 @@ function populateInfoWindow(marker, infowindow) {
               var $flickr = $("<p>Photos from <a href='https://www.flickr.com/'" + 
                               "target='_blank'>" + 
                               "flickr</a>:</p><div id='img-div-" + marker.id + "'></div>");
-              // var $img_div = $("<div id='img-div'></div>");
               $("#flickr-" + marker.id).append($flickr);
               
               if(data) {
@@ -444,8 +418,6 @@ function populateInfoWindow(marker, infowindow) {
                   $img.after(spacer);
                   $("#img-div-" + marker.id).append($imglink.append($img));
                   // $("#id").append($imglink.append($img));
-                  // console.log(data.photos.photo[i]);
-                  console.log(photo.id);
                   
                   flickr_photos[i] = photo;
                 }
