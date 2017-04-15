@@ -312,7 +312,6 @@ function populateInfoWindow(marker, infowindow) {
         };
         var panorama = new google.maps.StreetViewPanorama(
           document.getElementById(pano_id), panoramaOptions);
-        console.log(document.getElementById(pano_id));
         var srcStr = marker.title;
         
 
@@ -425,22 +424,27 @@ function populateInfoWindow(marker, infowindow) {
           },
           complete: function() {
             // If flickr resources loaded, display attribution info:
-            // // console.log(flickr_photos);
             if(flickr_photos.length > 0) {
-              // // console.log(flickr_photos[0]);
               $.ajax({
                 url: flickr_url,
                 data: {
                   method: "flickr.photos.getInfo",
                   api_key: flickr_api_key,
-                  photo_id: flickr_photos[0].id
+                  photo_id: flickr_photos[0].id,
+                  format: "json",
+                  nojsoncallback: "1"
                 },
                 dataType: "json",
                 success: function (data) {
-                  console.log(data);
+                  console.log(data.photo.owner.username);
+                  console.log("success");
                 },
                 fail: function() {
                   console.log("fail");
+                }, 
+                complete: function() {
+                  console.log("complete");
+                  
                 }
               });
             }
