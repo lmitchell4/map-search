@@ -386,7 +386,8 @@ function populateInfoWindow(marker, infowindow) {
             privacy_filter: 1,
             safe_search: 1,
             format: "json",
-            nojsoncallback: "1"
+            nojsoncallback: "1",
+            extras: "owner_name"
           },
           // dataType: "jsonp",
           dataType: "json",
@@ -421,54 +422,8 @@ function populateInfoWindow(marker, infowindow) {
             }
 
             clearTimeout(flickrRequestTimeout);
-          },
-          complete: function() {
-            // If flickr resources loaded, display attribution info:
-            if(flickr_photos.length > 0) {
-              $.ajax({
-                url: flickr_url,
-                data: {
-                  method: "flickr.photos.getInfo",
-                  api_key: flickr_api_key,
-                  photo_id: flickr_photos[0].id,
-                  format: "json",
-                  nojsoncallback: "1"
-                },
-                dataType: "json",
-                success: function (data) {
-                  console.log(data.photo.owner.username);
-                  console.log("success");
-                },
-                fail: function() {
-                  console.log("fail");
-                }, 
-                complete: function() {
-                  console.log("complete");
-                  
-                }
-              });
-            }
           }
         });
-        
-        
-            
-                          // $.ajax({
-                            // url: flickr_url,
-                            // data: {
-                              // method: "flickr.photos.getInfo",
-                              // api_key: flickr_api_key,
-                              // photo_id: flickr_photos[0].id
-                            // },
-                            // dataType: "json",
-                            // success: function (data) {
-                              // console.log(data);
-                            // },
-                            // fail: function() {
-                              // console.log("fail");
-                            // }
-                          // });
-
       } else {
         infowindow.setContent("<div>" + marker.title + "</div>" +
           "<div>No Street View Found</div>");
