@@ -441,13 +441,25 @@ document.addEventListener("DOMContentLoaded", function () {
       lang = "en";
     }
     
-    var js_file = document.createElement("script");
-    js_file.type = "text/javascript";
-    js_file.async = true;
-    js_file.defer = true;
-    js_file.src = "https://maps.googleapis.com/maps/api/js?libraries=places&key=" + 
-                    maps_api_key + "&callback=initMap&language=" + lang;
-    document.getElementsByTagName("head")[0].appendChild(js_file);
+    // var js_file = document.createElement("script");
+    // js_file.type = "text/javascript";
+    // js_file.async = true;
+    // js_file.defer = true;
+    // js_file.src = "https://maps.googleapis.com/maps/api/js?libraries=places&key=" + 
+                    // maps_api_key + "&callback=initMap&language=" + lang;
+    // document.getElementsByTagName("head")[0].appendChild(js_file);
     
+    $.ajax({
+      url: "https://maps.googleapis.com/maps/api/js?libraries=places&key=" + 
+              maps_api_key + "&callback=initMap&language=" + lang,
+      dataType: "script",
+      async: true,
+      success: function() {
+      }
+    }).fail(function() {      
+      $("#map").append("<h3 class='error'>Unfortunately, we were unable to load Google Maps.</h3>" + 
+                       "<h3 class='error'>Please try again later.</h3>");
+    });;
+
   }
 });

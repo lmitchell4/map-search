@@ -29,6 +29,10 @@ html, body {
   padding-top: 10px;
 }
 
+.error {
+  text-align: center;
+}
+
 /* #wiki-links { */
   /* padding-top: -5px; */
 /* } */
