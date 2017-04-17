@@ -30,7 +30,7 @@ var markers = [];
 // Array for location list:
 var allLocations = ko.observableArray([]);
 
-// Timer 
+// Timer for marker animation:
 var timer;
 
 
@@ -104,9 +104,11 @@ function initMap() {
     }
   ];
 
-  // Constructor creates a new map - only center and zoom are required.
+  // Create the map:
   map = new google.maps.Map(document.getElementById("map"), {
-    center: {lat: 40.7413549, lng: -73.9980244},
+    // center: {lat: 40.7413549, lng: -73.9980244},
+    // center: {lat: 41.8781, lng: -87.6298},
+    center: {lat: 41.8622646, lng: -87.61663820000001},
     zoom: 13,
     // styles: styles,
     mapTypeControl: false
@@ -114,67 +116,55 @@ function initMap() {
 
   var locations = myViewModel.getLocations();
 
-  // Initialize the drawing manager.
-  var drawingManager = new google.maps.drawing.DrawingManager({
-    drawingMode: google.maps.drawing.OverlayType.POLYGON,
-    drawingControl: true,
-    drawingControlOptions: {
-      position: google.maps.ControlPosition.TOP_LEFT,
-      drawingModes: [
-        google.maps.drawing.OverlayType.POLYGON
-      ]
-    }
-  });
-
-  // Style the markers a bit. This will be our listing marker icon.
+  // Set styles for the markers:
   var defaultIcon = makeMarkerIcon("0091ff");
 
-  // The following group uses the location array to create an array of markers on initialize.
-  for (var i = 0; i < locations.length; i++) {
-    // Get the position from the location array.
+  // Create the markers:
+  for(var i = 0; i < locations.length; i++) {
+    // Get the position and title of the current location:
     var position = locations[i].location;
     var title = locations[i].title;
-    // Create a marker per location, and put into markers array.
+    
+    // Create a marker.
+    // infoWindowOpen is a custom property indicating whether the
+    //  marker's infowindow is open.
     var marker = new google.maps.Marker({
       position: position,
       title: title,
       animation: google.maps.Animation.DROP,
       icon: defaultIcon,
-      id: i
+      id: i,
+      infoWindowOpen: false
     });
     
-    // Add property indicating whether the marker's infowindow is open.
-    marker.infoWindowOpen = false;
     
     // Push the marker to our array of markers.
     markers.push(marker);
     
-    // "These events may look like standard DOM events, but they are actually 
-    //  part of the Maps JavaScript API."
+    // The click, mouseover, and mouseout event listeners on markers look 
+    // like standard DOM events, but are actually part of the 
+    // Maps JavaScript API.
 
-    // Create an onclick event to open the large infowindow at each marker.
+    // Open an infowindow when the marker is clicked.
     marker.addListener("click", function() {clickMarker(this)});
     
-    // Two event listeners - one for mouseover, one for mouseout,
-    // to change the colors back and forth.
+    // Change marker color when mousing over it.
     marker.addListener("mouseover", function() {highlightMarker(this)});
     marker.addListener("mouseout", function() {unhighlightMarker(this)});
     
     allLocations.push( {
       title: marker.title,
       marker_id: marker.id
-    } ); 
-
+    } );
   }
+  
   document.getElementById("show-listings").addEventListener("click", showListings);
-
   document.getElementById("hide-listings").addEventListener("click", function() {
     hideMarkers(markers);
   });
   
   showListings();
 }
-
 
 
 function clickMarker(marker) {
@@ -190,34 +180,30 @@ function clickMarker(marker) {
 
 
 function highlightMarker(marker) {
-  // Create a "highlighted location" marker color for when the user
-  // mouses over the marker.
+  // Change the marker color from the default:
   var highlightedIcon = makeMarkerIcon("9400D3");
   marker.setIcon(highlightedIcon);
 };
 
+
 function unhighlightMarker(marker) {
-  // Style the markers a bit. This will be our listing marker icon.
+  // Return to normal marker color:
   var defaultIcon = makeMarkerIcon("0091ff");
   marker.setIcon(defaultIcon);
 };
 
 
-
-// This function populates the infowindow when the marker is clicked. 
+// Populate the infowindow when the marker is clicked:
 function populateInfoWindow(marker, infowindow) {
 
-  // Check to make sure the infowindow is not already opened on this marker.
-  if (!marker.infoWindowOpen) {
+  // Check tahat the infowindow for this marker is not already open:
+  if(!marker.infoWindowOpen) {
     marker.infoWindowOpen = true;
 
-    // Make sure the infoWindowOpen property is cleared if the infowindow is closed.
     infowindow.addListener("closeclick", function() {
+      // Reset this property when infowindow is closed:
       marker.infoWindowOpen = false;
     });
-
-    var streetViewService = new google.maps.StreetViewService();
-    var radius = 50;
   
     // In case the status is OK, which means the pano was found, compute the
     // position of the streetview image, then calculate the heading, then get a
@@ -250,7 +236,7 @@ function populateInfoWindow(marker, infowindow) {
         var srcStr = marker.title;
         
 
-        // http://stackoverflow.com/questions/4772774/how-do-i-create-a-link-using-javascript        
+        // Load Wikipedia resources:
         $.ajax({
           url: "http://en.wikipedia.org/w/api.php",
           data: {
@@ -262,7 +248,7 @@ function populateInfoWindow(marker, infowindow) {
           dataType: "jsonp",
           timeout: 6000,
           // jsonp: "callback",
-          success: function (data) {
+          success: function(data) {
             var articles = data.query.search;
 
             var items = [];
@@ -293,14 +279,8 @@ function populateInfoWindow(marker, infowindow) {
         });
 
     
-
-        // Thanks to:
-        // http://kylerush.net/blog/tutorial-flickr-api-javascript-jquery-ajax-json-build-detailed-photo-wall/        
-        // https://www.flickr.com/services/api/misc.urls.html
-        // var flickr_url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=";
-        // flickr_url += flickr_api_key + "&tags=flower&format=json&nojsoncallback=1";        
+        // Load flickr resources:
         var flickr_url = "https://api.flickr.com/services/rest/?";
-        var flickr_photos = [];
         $.ajax({
           url: flickr_url,
           data: {
@@ -316,7 +296,7 @@ function populateInfoWindow(marker, infowindow) {
           // dataType: "jsonp",
           dataType: "json",
           timeout: 6000,
-          success: function (data) {
+          success: function(data) {
             if(data.photos.photo.length > 0) {
               var $flickr = $("<p>Photos from <a href='https://www.flickr.com/'" + 
                               "target='_blank'>" + 
@@ -339,12 +319,8 @@ function populateInfoWindow(marker, infowindow) {
                   
                   var $user = $("<p></p>");
                   $user.text(photo.ownername);
-                  // $("#img-div-" + marker.id).append($imglink.append($user));
                   $("#img-div-" + marker.id).append($imglink.append($img));
                   $("#img-div-" + marker.id).after($user);
-                  
-                  
-                  flickr_photos[i] = photo;
                 }
               }
             }
@@ -357,20 +333,22 @@ function populateInfoWindow(marker, infowindow) {
           "<div>No Street View Found</div>");
       }
     }
-    // Use streetview service to get the closest streetview image within
-    // 50 meters of the markers position
+    
+    // Get the closest streetview image within 50 meters of the marker:
+    var streetViewService = new google.maps.StreetViewService();
+    var radius = 50;
     streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-    // Open the infowindow on the correct marker.
+
+    // Open the infowindow on the correct marker:
     infowindow.open(map, marker);
   }
 }
 
-// This function will loop through the markers array and display them all 
-// on the map and in the list.
+// Display the locations in the list and on the map:
 function showListings() {
   var bounds = new google.maps.LatLngBounds();
   // Extend the boundaries of the map for each marker and display the marker
-  for (var i = 0; i < markers.length; i++) {
+  for(var i=0; i < markers.length; i++) {
     markers[i].setMap(map);
     bounds.extend(markers[i].position);
   }
@@ -379,7 +357,7 @@ function showListings() {
 
 // This function will loop through the listings and hide them all.
 function hideMarkers(markers) {
-  for (var i = 0; i < markers.length; i++) {
+  for(var i=0; i < markers.length; i++) {
     markers[i].setMap(null);
   }
 }
@@ -401,35 +379,18 @@ function makeMarkerIcon(markerColor) {
 
 
 
-
-// var ListView = function(locations, markers) {
-  // var self = this;
-  // self.filterCriteria = ko.observable("");
-  // self.locationsOA = ko.observableArray(locations);
-  // self.filteredLocations = ko.computed(function() {
-    // var filter = self.filterCriteria().toLowerCase();
-    
-    // if(!filter) {
-      // return self.locationsOA;
-    // } else {
-      // return ko.utils.arrayFilter(self.locations(), function(loc) {
-        // var match = stringStartsWith(loc.title.toLowerCase(), filter);
-        // loc.marker.setVisible(match);
-        // return match;
-      // });
-    // }
-  // });
-// }
-
-
-
-
-
 var ViewModel = function() {
   var self = this;
 
-  // Show the same info window whether the marker is clicked or the 
-  // list item is clicked.
+  self.getLocations = function() {
+    return model.locations;
+  };
+  
+  self.allLocations = allLocations;
+
+  
+  // When a location list item is clicked or moused over, show same 
+  // results as when the marker is clicked or moused over:
   self.clickListItem = function(clickedListItem) {  
     var marker = markers[clickedListItem.marker_id];
     clickMarker(marker);
@@ -444,18 +405,9 @@ var ViewModel = function() {
     var marker = markers[mousedOutListItem.marker_id];
     unhighlightMarker(marker);
   };
-
-  self.getLocations = function() {
-    return model.locations;
-  };
-  
-  self.allLocations = allLocations;
   
   
-
-  
-  
-
+  // Implement filter functionality:
   self.filterCriteria = ko.observable("");
   self.filteredLocations = ko.computed(function() {
     var filter = self.filterCriteria();
@@ -476,16 +428,10 @@ var ViewModel = function() {
       });
     }
   });
-
-
-
 }
 
-// var myListView = new ListView();
 var myViewModel = new ViewModel();
 ko.applyBindings(myViewModel);
-
-
 
 
 
@@ -506,4 +452,3 @@ document.addEventListener('DOMContentLoaded', function () {
     
   }
 });
-
