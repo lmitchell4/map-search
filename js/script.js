@@ -1,22 +1,22 @@
 
 var model = {
-  // These are the place listings that will be shown to the user.
-  // Normally we'd have these in a database instead.  
+  // Hard code the locations of interest for now.
+  // Normally they would be in a database.  
   locations: [
-    {title: "Shedd Aquarium", location: {lat: 41.8676217, lng: -87.6136616}},
     // {title: "Brookfield Zoo", location: {lat: 41.8350288, lng: -87.83363030000001}},
-    {title: "Lincoln Park Zoo", location: {lat: 41.9187897, lng: -87.635465}},
     // {title: "Museum of Science and Industry", location: {lat: 41.7906088, lng: -87.5830586}},
+    // {title: "National Museum of Mexican Art", location: {lat: 41.8561698, lng: -87.6729641}},
+    // {title: "Museum of Contemporary Art", location: {lat: 41.8972116, lng: -87.62107069999999}},
+    // {title: "Navy Pier", location: {lat: 41.891731, lng: -87.60225869999999}},
+    // {title: "Wrigley Field", location: {lat: 41.9474536, lng: -87.6561341}},
+    {title: "Shedd Aquarium", location: {lat: 41.8676217, lng: -87.6136616}},
+    {title: "Lincoln Park Zoo", location: {lat: 41.9187897, lng: -87.635465}},
     {title: "Field Museum of Natural History", location: {lat: 41.8661733, lng: -87.61698620000001}},
     {title: "Art Institute of Chicago", location: {lat: 41.879347, lng: -87.621228}},
-    // {title: "National Museum of Mexican Art", location: {lat: 41.8561698, lng: -87.6729641}},
     {title: "Chicago History Museum", location: {lat: 41.9119691, lng: -87.6315025}},
     {title: "International Museum of Surgical Science", location: {lat: 41.910275, lng: -87.62661969999999}},
     {title: "Adler Planetarium", location: {lat: 41.8663557, lng: -87.60661159999999}},
-    // {title: "Museum of Contemporary Art", location: {lat: 41.8972116, lng: -87.62107069999999}},
-    // {title: "Navy Pier", location: {lat: 41.891731, lng: -87.60225869999999}},
     {title: "Soldier Field", location: {lat: 41.8622646, lng: -87.61663820000001}}
-    // {title: "Wrigley Field", location: {lat: 41.9474536, lng: -87.6561341}}
   ]
 }
 
@@ -24,18 +24,15 @@ var model = {
 
 var map;
 
-// Create a new blank array for all the listing markers.
+// Array for location markers on the map:
 var markers = [];
+
+// Array for location list:
 var allLocations = ko.observableArray([]);
 
+// Timer 
 var timer;
 
-// This global polygon variable is to ensure only ONE polygon is rendered.
-var polygon = null;
-
-// Create placemarkers array to use in multiple functions to have control
-// over the number of places that show.
-var placeMarkers = [];
 
 
 function initMap() {
@@ -111,7 +108,7 @@ function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: {lat: 40.7413549, lng: -73.9980244},
     zoom: 13,
-    styles: styles,
+    // styles: styles,
     mapTypeControl: false
   });
 
@@ -253,13 +250,7 @@ function populateInfoWindow(marker, infowindow) {
         var srcStr = marker.title;
         
 
-        // http://stackoverflow.com/questions/4772774/how-do-i-create-a-link-using-javascript
-        
-        // Load Wikipedia articles:
-        var wikiRequestTimeout = setTimeout(function() {
-          console.log("Failed to get Wikipedia resources");
-        }, 8000);
-        
+        // http://stackoverflow.com/questions/4772774/how-do-i-create-a-link-using-javascript        
         $.ajax({
           url: "http://en.wikipedia.org/w/api.php",
           data: {
@@ -269,6 +260,7 @@ function populateInfoWindow(marker, infowindow) {
             format: "json"
           },
           dataType: "jsonp",
+          timeout: 6000,
           // jsonp: "callback",
           success: function (data) {
             var articles = data.query.search;
@@ -295,12 +287,9 @@ function populateInfoWindow(marker, infowindow) {
               $wiki_list.append(items[0]);
               $wiki_list.append(items[1]);              
             }
-
-            clearTimeout(wikiRequestTimeout);
-          },
-          fail: function(data) {
-            console.log("Unable to load Wikipedia resources.");
           }
+        }).fail(function() {
+          console.log("Unable to load Wikipedia resources.");
         });
 
     
@@ -309,13 +298,7 @@ function populateInfoWindow(marker, infowindow) {
         // http://kylerush.net/blog/tutorial-flickr-api-javascript-jquery-ajax-json-build-detailed-photo-wall/        
         // https://www.flickr.com/services/api/misc.urls.html
         // var flickr_url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=";
-        // flickr_url += flickr_api_key + "&tags=flower&format=json&nojsoncallback=1";
-        
-        // Load flickr images:
-        var flickrRequestTimeout = setTimeout(function() {
-          console.log("Failed to get flickr resources");
-        }, 8000);
-  
+        // flickr_url += flickr_api_key + "&tags=flower&format=json&nojsoncallback=1";        
         var flickr_url = "https://api.flickr.com/services/rest/?";
         var flickr_photos = [];
         $.ajax({
@@ -332,6 +315,7 @@ function populateInfoWindow(marker, infowindow) {
           },
           // dataType: "jsonp",
           dataType: "json",
+          timeout: 6000,
           success: function (data) {
             if(data.photos.photo.length > 0) {
               var $flickr = $("<p>Photos from <a href='https://www.flickr.com/'" + 
@@ -364,12 +348,9 @@ function populateInfoWindow(marker, infowindow) {
                 }
               }
             }
-
-            clearTimeout(flickrRequestTimeout);
-          },
-          fail: function(data) {
-            console.log("Unable to load flickr resources.");
           }
+        }).fail(function() {
+          console.log("Unable to load flickr resources.");
         });
       } else {
         infowindow.setContent("<div>" + marker.title + "</div>" +
