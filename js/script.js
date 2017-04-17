@@ -359,6 +359,9 @@ function populateInfoWindow(marker, infowindow) {
             }
 
             clearTimeout(wikiRequestTimeout);
+          },
+          fail: function(data) {
+            console.log("Unable to load Wikipedia resources.");
           }
         });
 
@@ -411,10 +414,13 @@ function populateInfoWindow(marker, infowindow) {
                   $img.attr("src", "https://farm" + photo.farm + 
                             ".staticflickr.com/" + photo.server + "/" + 
                             photo.id + "_" + photo.secret + "_t.jpg");
-                  var spacer = $("<span class='hspacer-5'></span>");
-                  $img.after(spacer);
+                  
+                  var $user = $("<p></p>");
+                  $user.text(photo.ownername);
+                  // $("#img-div-" + marker.id).append($imglink.append($user));
                   $("#img-div-" + marker.id).append($imglink.append($img));
-                  // $("#id").append($imglink.append($img));
+                  $("#img-div-" + marker.id).after($user);
+                  
                   
                   flickr_photos[i] = photo;
                 }
@@ -422,6 +428,9 @@ function populateInfoWindow(marker, infowindow) {
             }
 
             clearTimeout(flickrRequestTimeout);
+          },
+          fail: function(data) {
+            console.log("Unable to load flickr resources.");
           }
         });
       } else {
