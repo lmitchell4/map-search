@@ -10,7 +10,7 @@ var model = {
     // {title: "Navy Pier", location: {lat: 41.891731, lng: -87.60225869999999}},
     // {title: "Wrigley Field", location: {lat: 41.9474536, lng: -87.6561341}},
     {title: "Shedd Aquarium", location: {lat: 41.8676217, lng: -87.6136616}},
-    {title: "Lincoln Park Zoo", location: {lat: 41.9187897, lng: -87.635465}},
+    {title: "Lincoln Park Zoo", location: {lat: 41.9211, lng: -87.6340}},
     {title: "Field Museum of Natural History", location: {lat: 41.8661733, lng: -87.61698620000001}},
     {title: "Art Institute of Chicago", location: {lat: 41.879347, lng: -87.621228}},
     {title: "Chicago History Museum", location: {lat: 41.9119691, lng: -87.6315025}},
