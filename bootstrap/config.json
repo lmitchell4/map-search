@@ -386,6 +386,7 @@
     "grid.less",
     "forms.less",
     "responsive-utilities.less",
+    "glyphicons.less",
     "navs.less",
     "navbar.less",
     "component-animations.less",
@@ -397,5 +398,5 @@
     "collapse.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=a2585eced6212c91280000aacea2f14b"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=3d4bb5a6bbb9ed3a7a1445d69716707d"
 }
