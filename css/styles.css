@@ -28,12 +28,9 @@ hr {
   position: relative;
 }
 
-/* #map { */
-  /* height: 100%; */
-/* } */
-
 #map {
   bottom:0px;
+  width: 100%;
   height: 100%;
   left: 362px;
   position: absolute;
@@ -69,9 +66,142 @@ hr {
   /* background: #029bc9; */
 }
 
-.wiki-intro {
-  padding-top: 10px;
+.rsc-btn {
+  font-size: 16px;
+  color: #9400D3;
+  background: #fff;
+  border: 1px solid #999;
+  border-radius: 8px;
+  /* height: 100%; */
+  font-weight: 400;
+  /* line-height: 35px; */
+  padding: 10px;
 }
+
+.rsc-btn:hover {
+  cursor: pointer;
+  cursor: hand;
+  text-decoration: none;
+  color: #fff;
+  background: #9400D3;
+}
+
+#rsc-container {
+  position: absolute;
+  /* height: 240px; */
+  height: 300px;
+  left: 362px;
+  right: 0px;
+  bottom:0px;
+  z-index: 2;
+}
+
+#rsc-close {
+  position: absolute;
+  /* float: right; */
+  right: 0;
+  
+  /* position: relative; */
+  /* float: right; */
+  
+  font-size: 20px;
+  margin: 10px 0 0 0;
+}
+
+.rsc-body {
+  height: calc(100% - 41.6px);
+  padding: 10px;
+  /* background: #9400D3; */
+  background: #fff;
+}
+
+.rsc-text {
+  /* height: calc(100% - 150px); */
+  margin: 0;
+}
+
+.img-button {
+  font-size: 25px;
+  position: relative;
+  /* top: -60px; */
+  top: -62.5px;
+}
+
+.img-button:hover {
+  cursor: pointer;
+  cursor: hand;
+}
+
+#display-panel {
+  display: inline-block;
+  height: 150px;
+  width: 480px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  left: 0;
+}
+
+#img-list {
+  /* display: inline-block; */
+  height: 150px;
+  /* width: 480px; */
+  width: 960px;
+  margin: 0;
+  padding: 0;
+  /* overflow: hidden; */
+  position: relative;
+  left: 0;
+  list-style: none;
+}
+
+.img-container {
+  /* height: 100%; */
+  display: inline-block;
+  height: 150px;
+  width: 150px;
+  background: #9ac16e;
+  margin-right: 10px;
+}
+
+.hspace-10 {
+  width: 10px;
+  height: 20px;
+  display: inline-block;
+}
+
+#left-btn {
+  margin-right: 10px;
+}
+
+#img-1 {
+  /* float: left; */
+}
+
+#img-2 {
+  background: #a180bc;
+}
+
+#img-3 {
+  background: #ffc3a0;
+}
+
+#img-4 {
+  background: #3ffdc6;
+}
+
+#img-5 {
+  background: #8c0008;
+}
+
+#img-6 {
+  background: #dee727;
+}
+
+
+
+
 
 .error {
   text-align: center;

@@ -9,32 +9,70 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 		<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
-    <link href="bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 		<link href="css/styles.css" rel="stylesheet" type="text/css">
 	</head>
 
   <body>
     <div class="container">
-      <div class="options-box">
-        <h1>Plan your trip to Chicago</h1>
-        <div>
-          <input data-bind="textInput: filterCriteria" id="filter-input" type="text" value=""/>
-          <p id="filter-label">Filter</p>
-          <ul data-bind="foreach: filteredLocations" id="listings-list">
-            <li><a data-bind="text: $data.title, click: $parent.clickListItem, event: { mouseover: $parent.mouseOverListItem, mouseout: $parent.mouseOutListItem }"></a></li>
-          </ul>
-          <div id="id"></div>
-          <input id="show-listings" type="button" value="Show Listings">
-          <input id="hide-listings" type="button" value="Hide Listings">
+      <!-- <div class="row"> -->
+      
+        <!-- <div class="col-xs-4 col-sm-4 padding-none"> -->
+          <div class="options-box">
+            <h1>Plan your trip to Chicago</h1>
+            <div>
+              <input data-bind="textInput: filterCriteria" id="filter-input" type="text" value=""/>
+              <p id="filter-label">Filter</p>
+              <ul data-bind="foreach: filteredLocations" id="listings-list">
+                <li><a data-bind="text: $data.title, click: $parent.clickListItem, event: { mouseover: $parent.mouseOverListItem, mouseout: $parent.mouseOutListItem }"></a></li>
+              </ul>
+              <div id="id"></div>
+              <input id="show-listings" type="button" value="Show Listings">
+              <input id="hide-listings" type="button" value="Hide Listings">
+            </div>
+            <hr>
+          </div>
+        <!-- </div> -->
+      
+        <!-- <div class="col-xs-12 col-sm-8 padding-none"> -->
+          <div id="map"></div>
+        <!-- </div> -->
+      
+      <!-- </div> -->
+      
+      <div id="rsc-container">
+        <div id="rsc-close" class="glyphicon glyphicon-remove"></div>
+        <h4>Place Name</h4>
+        <ul class="nav nav-tabs">
+          <li role="presentation" class="active"><a href="#">Wikipedia Articles</a></li>
+          <li role="presentation"><a href="#">flickr Photos</a></li>
+        </ul>
+        <div class="rsc-body">
+          <p class="rsc-text">Check out these photos from <a href='https://www.flickr.com/' target='_blank'>flickr</a>:</p>
+          <div class="carousel">
+            <span id="left-btn" class="img-button glyphicon glyphicon-circle-arrow-left"></span>
+
+            <div id="display-panel">
+              <ul id="img-list">
+                <li id="img-1" class="img-container">
+                </li><li id="img-2" class="img-container">
+                </li><li id="img-3" class="img-container">
+                </li><li id="img-4" class="img-container">
+                </li><li id="img-5" class="img-container">
+                </li><li id="img-6" class="img-container"></li>
+              </ul>
+            </div>
+            
+            <span id="right-btn" class="img-button glyphicon glyphicon-circle-arrow-right"></span>
+          </div>
         </div>
-        <hr>
       </div>
-      <div id="map"></div>
+    
     </div>
     
     <script src="js/lib/jquery-3.1.1.min.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
-    <script src="bootstrap/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="js/api_keys.js" defer></script>
     <script src="js/script.js" defer></script>
 

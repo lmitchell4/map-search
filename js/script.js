@@ -211,7 +211,173 @@ function populateInfoWindow(marker, infowindow) {
         var nearStreetViewLocation = data.location.latLng;
         var heading = google.maps.geometry.spherical.computeHeading(
           nearStreetViewLocation, marker.position);
-          
+        
+        // Set up info window content. 
+        // Additional info gets added in API callbacks.
+        var pano_id = "pano-" + marker.id;
+        var content = "<h4>" + marker.title + "</h4>";
+        content += "<div class='pano' id='" + pano_id + "'></div><br>";
+        content += "<div class='rsc-btn' id='" + marker.id + "'>Show additional resources</div>";        
+        infowindow.setContent(content);
+        
+        // Set up panorma picture:
+        var panoramaOptions = {
+          position: nearStreetViewLocation,
+          pov: {
+            heading: heading,
+            pitch: 30
+          }
+        };
+        var panorama = new google.maps.StreetViewPanorama(
+          document.getElementById(pano_id), panoramaOptions);
+
+        document.getElementById(marker.id).addEventListener("click", function() {
+          var $rsc_container = $("<div id='rsc-container'></div>");
+          $("#map").after($rsc_container);
+        });
+
+        
+        
+        
+        
+        // // Set up info window content. 
+        // // Additional info gets added in API callbacks.
+        // var pano_id = "pano" + marker.id;
+        // var content = "<div>" + marker.title + "</div>";
+        // content += "<div class='pano' id='" + pano_id + "'></div>";
+        // content += "<div id='wiki-" + marker.id + "'></div>";
+        // content += "<div id='flickr-" + marker.id + "'></div>";
+        // infowindow.setContent(content);
+        
+        // // Set up panorma picture:
+        // var panoramaOptions = {
+          // position: nearStreetViewLocation,
+          // pov: {
+            // heading: heading,
+            // pitch: 30
+          // }
+        // };
+        // var panorama = new google.maps.StreetViewPanorama(
+          // document.getElementById(pano_id), panoramaOptions);
+        // var srcStr = marker.title;
+        
+
+        // // Load Wikipedia resources:
+        // $.ajax({
+          // url: "http://en.wikipedia.org/w/api.php",
+          // data: {
+            // action: "query",
+            // list: "search",
+            // srsearch: srcStr,
+            // format: "json"
+          // },
+          // dataType: "jsonp",
+          // timeout: 6000,
+          // // jsonp: "callback",
+          // success: function(data) {
+            // var articles = data.query.search;
+
+            // var items = [];
+            // $.each(articles, function(key, article) {
+              // var article_link = $("<a target='_blank'></a>");
+              // article_link.attr("href", "http://en.wikipedia.org/wiki/" + article.title);
+              // article_link.text(article.title); 
+              
+              // var list_item = $("<li></li>");
+              // list_item.append(article_link);
+              // items.push(list_item);
+            // });
+
+            // var final_list = items.join("");
+            // if(items.length > 0) {
+              // var $wiki = $("<p class='wiki-intro'>Related " + 
+                            // "<a href='https://www.wikipedia.org/' target='_blank'>" + 
+                            // "Wikipedia</a> articles:</p>" + 
+                            // "<ul id='wiki-list-" + marker.id + "'></ul>");
+              // $("#wiki-" + marker.id).append($wiki);              
+              // var $wiki_list = $("#wiki-list-" + marker.id);
+              // $wiki_list.append(items[0]);
+              // $wiki_list.append(items[1]);              
+            // }
+          // }
+        // }).fail(function() {
+          // console.log("Unable to load Wikipedia resources.");
+        // });
+
+    
+        // // Load flickr resources:
+        // var flickr_url = "https://api.flickr.com/services/rest/?";
+        // $.ajax({
+          // url: flickr_url,
+          // data: {
+            // method: "flickr.photos.search",
+            // api_key: flickr_api_key,
+            // tags: srcStr,
+            // privacy_filter: 1,
+            // safe_search: 1,
+            // format: "json",
+            // nojsoncallback: "1",
+            // extras: "owner_name"
+          // },
+          // // dataType: "jsonp",
+          // dataType: "json",
+          // timeout: 6000,
+          // success: function(data) {
+            // if(data.photos.photo.length > 0) {
+              // var $flickr = $("<p>Photos from <a href='https://www.flickr.com/'" + 
+                              // "target='_blank'>" + 
+                              // "flickr</a>:</p><div id='img-div-" + marker.id + "'></div>");
+              // $("#flickr-" + marker.id).append($flickr);
+              
+              // if(data) {
+                // var n = 3;
+                // if(data.photos.photo.length < 3) {
+                  // n = data.photos.photo.length;
+                // }
+                // for(var i = 0; i < n; i++) {
+                  // var photo = data.photos.photo[i];
+                  // var $imglink = $("<a href='http://flickr.com/photos/" + 
+                                  // photo.owner + "/" + photo.id + "' target='_blank'></a>");
+                  // var $img = $("<img class='flickr-img'>");
+                  // $img.attr("src", "https://farm" + photo.farm + 
+                            // ".staticflickr.com/" + photo.server + "/" + 
+                            // photo.id + "_" + photo.secret + "_t.jpg");
+                  
+                  // var $user = $("<p></p>");
+                  // $user.text(photo.ownername);
+                  // $("#img-div-" + marker.id).append($imglink.append($img));
+                  // $("#img-div-" + marker.id).after($user);
+                // }
+              // }
+            // }
+          // }
+        // }).fail(function() {
+          // console.log("Unable to load flickr resources.");
+        // });
+      } else {
+        infowindow.setContent("<div>" + marker.title + "</div>" +
+          "<div>No Street View Found</div>");
+      }
+    }
+    
+    // Get the closest streetview image within 50 meters of the marker:
+    var streetViewService = new google.maps.StreetViewService();
+    var radius = 50;
+    streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+
+    // Open the infowindow on the correct marker:
+    infowindow.open(map, marker);
+  }
+}
+
+
+
+
+
+
+
+
+function showResourcePanel() {
         // Set up info window content. 
         // Additional info gets added in API callbacks.
         var pano_id = "pano" + marker.id;
@@ -326,21 +492,14 @@ function populateInfoWindow(marker, infowindow) {
         }).fail(function() {
           console.log("Unable to load flickr resources.");
         });
-      } else {
-        infowindow.setContent("<div>" + marker.title + "</div>" +
-          "<div>No Street View Found</div>");
-      }
-    }
-    
-    // Get the closest streetview image within 50 meters of the marker:
-    var streetViewService = new google.maps.StreetViewService();
-    var radius = 50;
-    streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-
-    // Open the infowindow on the correct marker:
-    infowindow.open(map, marker);
-  }
 }
+
+
+
+
+
+
+
 
 // Display the locations in the list and on the map:
 function showListings() {
@@ -433,6 +592,97 @@ ko.applyBindings(myViewModel);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var slider = $("#img-list");                     // slider = ul element
+var leftProperty, newleftProperty;
+var sliderWorking = false;
+
+// the click event handler for the right button
+$("#right-btn").click(function() {
+  
+  if(!sliderWorking) {
+    sliderWorking = true;
+    
+    // Get current value of left property:
+    leftProperty = parseInt(slider.css("left"));
+    
+    console.log(leftProperty);
+    
+    // Figure out the new left property:
+    if(leftProperty - 160 > -960) {
+      newLeftProperty = leftProperty - 160; 
+    }
+    
+    // if(leftProperty - 160 <= -960) {
+      // newLeftProperty = 0;
+    // } else {
+      // newLeftProperty = leftProperty - 160; 
+    // }
+    
+    // Animate the movement of the panel:
+    slider.animate({left: newLeftProperty}, 1000, function() {
+      sliderWorking = false;
+    });
+  }
+  
+});
+
+// the click event handler for the left button
+$("#left-btn").click(function() {
+
+  if(!sliderWorking) {
+    sliderWorking = true;
+  
+    // Get current value of left property:
+    leftProperty = parseInt(slider.css("left"));
+    
+    console.log(leftProperty);
+    
+    // Figure out the new left property:
+    if(leftProperty < 0) {
+      newLeftProperty = leftProperty + 160;    
+    }
+    
+    // Animate the movement of the panel:
+    slider.animate( {left: newLeftProperty}, 1000, function() {
+      sliderWorking = false;
+    });
+  }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", function () {  
   if(document.querySelectorAll("#map").length > 0) {
     if(document.querySelector("html").lang) {
@@ -449,17 +699,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     // maps_api_key + "&callback=initMap&language=" + lang;
     // document.getElementsByTagName("head")[0].appendChild(js_file);
     
-    $.ajax({
-      url: "https://maps.googleapis.com/maps/api/js?libraries=places&key=" + 
-              maps_api_key + "&callback=initMap&language=" + lang,
-      dataType: "script",
-      async: true,
-      success: function() {
-      }
-    }).fail(function() {      
-      $("#map").append("<h3 class='error'>Unfortunately, we were unable to load Google Maps.</h3>" + 
-                       "<h3 class='error'>Please try again later.</h3>");
-    });;
+    
+    
+    
+    // $.ajax({
+      // url: "https://maps.googleapis.com/maps/api/js?libraries=places&key=" + 
+              // maps_api_key + "&callback=initMap&language=" + lang,
+      // dataType: "script",
+      // async: true,
+      // success: function() {
+      // }
+    // }).fail(function() {
+      // $("#map").append("<h3 class='error'>Unfortunately, we were unable to load Google Maps.</h3>" + 
+                       // "<h3 class='error'>Please try again later.</h3>");
+    // });;
 
   }
 });
