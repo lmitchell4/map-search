@@ -702,17 +702,17 @@ document.addEventListener("DOMContentLoaded", function () {
     
     
     
-    // $.ajax({
-      // url: "https://maps.googleapis.com/maps/api/js?libraries=places&key=" + 
-              // maps_api_key + "&callback=initMap&language=" + lang,
-      // dataType: "script",
-      // async: true,
-      // success: function() {
-      // }
-    // }).fail(function() {
-      // $("#map").append("<h3 class='error'>Unfortunately, we were unable to load Google Maps.</h3>" + 
-                       // "<h3 class='error'>Please try again later.</h3>");
-    // });;
+    $.ajax({
+      url: "https://maps.googleapis.com/maps/api/js?libraries=places&key=" + 
+              maps_api_key + "&callback=initMap&language=" + lang,
+      dataType: "script",
+      async: true,
+      success: function() {
+      }
+    }).fail(function() {
+      $("#map").append("<h3 class='error'>Unfortunately, we were unable to load Google Maps.</h3>" + 
+                       "<h3 class='error'>Please try again later.</h3>");
+    });;
 
   }
 });
