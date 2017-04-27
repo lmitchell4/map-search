@@ -33,6 +33,9 @@ var allLocations = ko.observableArray([]);
 // Timer for marker animation:
 var timer;
 
+// Wiki links:
+var wikiLinks = ko.observableArray([]);
+
 
 
 function initMap() {
@@ -194,7 +197,7 @@ function unhighlightMarker(marker) {
 // Populate the infowindow when the marker is clicked:
 function populateInfoWindow(marker, infowindow) {
 
-  // Check tahat the infowindow for this marker is not already open:
+  // Check that the infowindow for this marker is not already open:
   if(!marker.infoWindowOpen) {
     marker.infoWindowOpen = true;
 
@@ -231,10 +234,10 @@ function populateInfoWindow(marker, infowindow) {
         var panorama = new google.maps.StreetViewPanorama(
           document.getElementById(pano_id), panoramaOptions);
 
-        document.getElementById(marker.id).addEventListener("click", function() {
-          // var $rsc_container = $("<div id='rsc-container'></div>");
-          // $("#map").after($rsc_container);
-        });
+        // // document.getElementById(marker.id).addEventListener("click", function() {
+          // // // var $rsc_container = $("<div id='rsc-container'></div>");
+          // // // $("#map").after($rsc_container);
+        // // });
 
         $("#rsc-location-name").text(marker.title);
         $("#" + marker.id).click(function() {
@@ -282,36 +285,13 @@ function showResourcePanel(title) {
     // jsonp: "callback",
     success: function(data) {
       var articles = data.query.search;
-
-      var items = [];
-      $.each(articles, function(key, article) {
-        var article_link = $("<a target='_blank'></a>");
-        article_link.attr("href", "http://en.wikipedia.org/wiki/" + article.title);
-        article_link.text(article.title);
-
-        var list_item = $("<li></li>");
-        list_item.append(article_link);
-        items.push(list_item);
-      });
-
-      var final_list = items.join("");
       
-      var n = 3;
-      if(items.length < 3) {
-        n = items.length;
-      }
-
-      // // if(items.length > 0) {
-      var $wiki_list = $("#wiki-list");
-      for(var i = 0; i < n; i++) {
-        // // var $wiki = $("<p class='wiki-intro'>Related " +
-                      // // "<a href='https://www.wikipedia.org/' target='_blank'>" +
-                      // // "Wikipedia</a> articles:</p>" +
-                      // // "<ul id='wiki-list-" + marker.id + "'></ul>");
-        // // $("#wiki-" + marker.id).append($wiki);
-        // // var $wiki_list = $("#wiki-list-" + marker.id);
-        
-        $wiki_list.append(items[i]);
+      wikiLinks.removeAll();
+      for(var i = 0; i < Math.min(5,articles.length); i++) {
+        wikiLinks.push( {
+          title: articles[i].title,
+          url: "http://en.wikipedia.org/wiki/" + articles[i].title
+        } );        
       }
     }
   }).fail(function() {
@@ -496,6 +476,8 @@ var ViewModel = function() {
       });
     }
   });
+  
+  self.wikiLinks = wikiLinks;
 }
 
 var myViewModel = new ViewModel();
@@ -504,7 +486,10 @@ ko.applyBindings(myViewModel);
 
 
 
-
+// to do
+// Stop the picture scrolling at the right place
+// Need to reset the picture scrolling position when the resource window is close
+// Need to only show resources tab that successfully loads
 
 
 
