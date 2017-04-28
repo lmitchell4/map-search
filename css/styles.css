@@ -154,6 +154,10 @@ hr {
   display: inline-block;
 }
 
+.inline {
+  display: inline;
+}
+
 /* #img-1 { */
 /* } */
 

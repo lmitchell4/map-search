@@ -36,6 +36,8 @@ var timer;
 // Wiki links:
 var wikiLinks = ko.observableArray([]);
 
+// flickr photos:
+var flickrPhotos = ko.observableArray([]);
 
 
 function initMap() {
@@ -270,7 +272,7 @@ function populateInfoWindow(marker, infowindow) {
 
 function showResourcePanel(title) {
   $("#rsc-container").removeClass("hidden");
-  
+
   // Load Wikipedia resources:
   $.ajax({
     url: "http://en.wikipedia.org/w/api.php",
@@ -285,13 +287,13 @@ function showResourcePanel(title) {
     // jsonp: "callback",
     success: function(data) {
       var articles = data.query.search;
-      
+
       wikiLinks.removeAll();
       for(var i = 0; i < Math.min(5,articles.length); i++) {
         wikiLinks.push( {
           title: articles[i].title,
           url: "http://en.wikipedia.org/wiki/" + articles[i].title
-        } );        
+        } );
       }
     }
   }).fail(function() {
@@ -317,41 +319,60 @@ function showResourcePanel(title) {
     dataType: "json",
     timeout: 6000,
     success: function(data) {
-      if(data.photos.photo.length > 0) {
-        // // var $flickr = $("<p>Photos from <a href='https://www.flickr.com/'" +
-                        // // "target='_blank'>" +
-                        // // "flickr</a>:</p><div id='img-div-" + marker.id + "'></div>");
-        // // $("#flickr-" + marker.id).append($flickr);
+      var photos = data.photos.photo;
 
-        if(data) {
-          var n = 3;
-          if(data.photos.photo.length < 3) {
-            n = data.photos.photo.length;
-          }
-          for(var i = 0; i < n; i++) {
-            var photo = data.photos.photo[i];
-            var $imglink = $("<a href='http://flickr.com/photos/" +
-                            photo.owner + "/" + photo.id + "' target='_blank'></a>");
-            var $img = $("<img class='flickr-img'>");
-            $img.attr("src", "https://farm" + photo.farm +
-                      ".staticflickr.com/" + photo.server + "/" +
-                      photo.id + "_" + photo.secret + "_t.jpg");
-            var $imgList = $("#flickr-list");
-            $imgList.append($img);
-            
-            $("#flickr-tab").click(function() {
-              // $("#rsc-body").empty();
-              $("#wiki").attr("class","hidden");
-              $("#flickr").removeClass("hidden");
-            })
-            
-            console.log(photo.id);
-            // var $user = $("<p></p>");
-            // $user.text(photo.ownername);
-            // $("#img-div-" + marker.id).append($imglink.append($img));
-            // $("#img-div-" + marker.id).after($user);
-          }
-        }
+      flickrPhotos.removeAll();
+      for(var i = 0; i < Math.min(5,photos.length); i++) {
+        var photo = photos[i];
+        flickrPhotos.push( {
+          src: "https://farm" + photo.farm + ".staticflickr.com/" + 
+                photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg",
+          url: "http://flickr.com/photos/" + photo.owner + "/" + photo.id
+        } );
+      }
+      
+      
+      
+      
+      // if(data.photos.photo.length > 0) {
+        // // // var $flickr = $("<p>Photos from <a href='https://www.flickr.com/'" +
+                        // // // "target='_blank'>" +
+                        // // // "flickr</a>:</p><div id='img-div-" + marker.id + "'></div>");
+        // // // $("#flickr-" + marker.id).append($flickr);
+
+        // if(data) {
+          // var n = 3;
+          // if(data.photos.photo.length < 3) {
+            // n = data.photos.photo.length;
+          // }
+          // for(var i = 0; i < n; i++) {
+            // var photo = data.photos.photo[i];
+            // var $imglink = $("<a href='http://flickr.com/photos/" +
+                            // photo.owner + "/" + photo.id + "' target='_blank'></a>");
+            // var $img = $("<img class='flickr-img'>");
+            // $img.attr("src", "https://farm" + photo.farm +
+                      // ".staticflickr.com/" + photo.server + "/" +
+                      // photo.id + "_" + photo.secret + "_t.jpg");
+            // var $imgList = $("#flickr-list");
+            // $imgList.append($img);
+
+            // $("#flickr-tab").click(function() {
+              // // $("#rsc-body").empty();
+              // $("#wiki").attr("class","hidden");
+              // $("#flickr").removeClass("hidden");
+            // })
+
+            // console.log(photo.id);
+            // // var $user = $("<p></p>");
+            // // $user.text(photo.ownername);
+            // // $("#img-div-" + marker.id).append($imglink.append($img));
+            // // $("#img-div-" + marker.id).after($user);
+          // }
+        // }
+
+        
+        
+        
         
         // var $flickr = $("<p>Photos from <a href='https://www.flickr.com/'" +
                         // "target='_blank'>" +
@@ -378,7 +399,7 @@ function showResourcePanel(title) {
             // $("#img-div-" + marker.id).after($user);
           // }
         // }
-      }
+      // }
     }
   }).fail(function() {
     console.log("Unable to load flickr resources.");
@@ -476,8 +497,9 @@ var ViewModel = function() {
       });
     }
   });
-  
+
   self.wikiLinks = wikiLinks;
+  self.flickrPhotos = flickrPhotos;
 }
 
 var myViewModel = new ViewModel();
@@ -520,8 +542,8 @@ $("#right-btn").click(function() {
     leftProperty = parseInt(slider.css("left"));
 
     // Figure out the new left property:
-    if(leftProperty - 150 > -960) {
-      newLeftProperty = leftProperty - 150;
+    if(leftProperty - 155 > -155*flickrPhotos().length) {
+      newLeftProperty = leftProperty - 155;
     }
 
     // Animate the movement of the panel:
@@ -543,7 +565,7 @@ $("#left-btn").click(function() {
 
     // Figure out the new left property:
     if(leftProperty < 0) {
-      newLeftProperty = leftProperty + 150;
+      newLeftProperty = leftProperty + 155;
     }
 
     // Animate the movement of the panel:
