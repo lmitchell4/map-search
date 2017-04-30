@@ -236,11 +236,6 @@ function populateInfoWindow(marker, infowindow) {
         var panorama = new google.maps.StreetViewPanorama(
           document.getElementById(pano_id), panoramaOptions);
 
-        // // document.getElementById(marker.id).addEventListener("click", function() {
-          // // // var $rsc_container = $("<div id='rsc-container'></div>");
-          // // // $("#map").after($rsc_container);
-        // // });
-
         $("#rsc-location-name").text(marker.title);
         $("#" + marker.id).click(function() {
           showResourcePanel(marker.title)
@@ -320,59 +315,17 @@ function showResourcePanel(title) {
     timeout: 6000,
     success: function(data) {
       var photos = data.photos.photo;
-
+      var photo;
+      
       flickrPhotos.removeAll();
-      for(var i = 0; i < Math.min(5,photos.length); i++) {
-        var photo = photos[i];
+      for(var i = 0; i < Math.min(10,photos.length); i++) {
+        photo = photos[i];
         flickrPhotos.push( {
           src: "https://farm" + photo.farm + ".staticflickr.com/" + 
                 photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg",
           url: "http://flickr.com/photos/" + photo.owner + "/" + photo.id
         } );
       }
-      
-      
-      
-      
-      // if(data.photos.photo.length > 0) {
-        // // // var $flickr = $("<p>Photos from <a href='https://www.flickr.com/'" +
-                        // // // "target='_blank'>" +
-                        // // // "flickr</a>:</p><div id='img-div-" + marker.id + "'></div>");
-        // // // $("#flickr-" + marker.id).append($flickr);
-
-        // if(data) {
-          // var n = 3;
-          // if(data.photos.photo.length < 3) {
-            // n = data.photos.photo.length;
-          // }
-          // for(var i = 0; i < n; i++) {
-            // var photo = data.photos.photo[i];
-            // var $imglink = $("<a href='http://flickr.com/photos/" +
-                            // photo.owner + "/" + photo.id + "' target='_blank'></a>");
-            // var $img = $("<img class='flickr-img'>");
-            // $img.attr("src", "https://farm" + photo.farm +
-                      // ".staticflickr.com/" + photo.server + "/" +
-                      // photo.id + "_" + photo.secret + "_t.jpg");
-            // var $imgList = $("#flickr-list");
-            // $imgList.append($img);
-
-            // $("#flickr-tab").click(function() {
-              // // $("#rsc-body").empty();
-              // $("#wiki").attr("class","hidden");
-              // $("#flickr").removeClass("hidden");
-            // })
-
-            // console.log(photo.id);
-            // // var $user = $("<p></p>");
-            // // $user.text(photo.ownername);
-            // // $("#img-div-" + marker.id).append($imglink.append($img));
-            // // $("#img-div-" + marker.id).after($user);
-          // }
-        // }
-
-        
-        
-        
         
         // var $flickr = $("<p>Photos from <a href='https://www.flickr.com/'" +
                         // "target='_blank'>" +
@@ -540,7 +493,7 @@ $("#right-btn").click(function() {
 
     // Get current value of left property:
     leftProperty = parseInt(slider.css("left"));
-
+    
     // Figure out the new left property:
     if(leftProperty - 155 > -155*flickrPhotos().length) {
       newLeftProperty = leftProperty - 155;
@@ -560,8 +513,6 @@ $("#left-btn").click(function() {
 
     // Get current value of left property:
     leftProperty = parseInt(slider.css("left"));
-
-    console.log(leftProperty);
 
     // Figure out the new left property:
     if(leftProperty < 0) {
