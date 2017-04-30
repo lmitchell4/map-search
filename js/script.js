@@ -205,7 +205,10 @@ function populateInfoWindow(marker, infowindow) {
 
     infowindow.addListener("closeclick", function() {
       // Reset this property when infowindow is closed:
+      
+      // $("#rsc-container").attr("class", "hidden");
       marker.infoWindowOpen = false;
+      
     });
 
     // In case the status is OK, which means the pano was found, compute the
@@ -235,8 +238,12 @@ function populateInfoWindow(marker, infowindow) {
         };
         var panorama = new google.maps.StreetViewPanorama(
           document.getElementById(pano_id), panoramaOptions);
-
-        $("#rsc-location-name").text(marker.title);
+        
+        // If the resource window is already open from another marker,
+        // update it for this marker:
+        if($("#rsc-container").attr("class") != "hidden") {
+          // showResourcePanel(marker.title);
+        }
         $("#" + marker.id).click(function() {
           showResourcePanel(marker.title)
         });
@@ -267,6 +274,14 @@ function populateInfoWindow(marker, infowindow) {
 
 function showResourcePanel(title) {
   $("#rsc-container").removeClass("hidden");
+  $("#rsc-location-name").text(title);
+
+  // Reset the location of the photo slider each time this function runs:
+  $("#flickr-list").css("left",0);
+  
+  // Clear the observableArrays each time this function is run.
+  flickrPhotos.removeAll();
+  wikiLinks.removeAll();
 
   // Load Wikipedia resources:
   $.ajax({
@@ -283,7 +298,6 @@ function showResourcePanel(title) {
     success: function(data) {
       var articles = data.query.search;
 
-      wikiLinks.removeAll();
       for(var i = 0; i < Math.min(5,articles.length); i++) {
         wikiLinks.push( {
           title: articles[i].title,
@@ -317,7 +331,6 @@ function showResourcePanel(title) {
       var photos = data.photos.photo;
       var photo;
       
-      flickrPhotos.removeAll();
       for(var i = 0; i < Math.min(10,photos.length); i++) {
         photo = photos[i];
         flickrPhotos.push( {
@@ -461,24 +474,6 @@ ko.applyBindings(myViewModel);
 
 
 
-// to do
-// Stop the picture scrolling at the right place
-// Need to reset the picture scrolling position when the resource window is close
-// Need to only show resources tab that successfully loads
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -560,9 +555,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // js_file.src = "https://maps.googleapis.com/maps/api/js?libraries=places&key=" +
                     // maps_api_key + "&callback=initMap&language=" + lang;
     // document.getElementsByTagName("head")[0].appendChild(js_file);
-
-
-
 
     $.ajax({
       url: "https://maps.googleapis.com/maps/api/js?libraries=places&key=" +

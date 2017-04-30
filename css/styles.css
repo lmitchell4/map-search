@@ -66,6 +66,7 @@ hr {
 }
 
 .rsc-btn {
+  width: 210px;
   font-size: 16px;
   color: #9400D3;
   background: #fff;
@@ -85,7 +86,7 @@ hr {
 
 #rsc-container {
   /* position: absolute; */
-  /* height: 320px; */
+  height: 320px;
   
   
   width: 100%;
@@ -107,7 +108,7 @@ hr {
 }
 
 .rsc-body {
-  height: calc(100% - 41.6px);
+  /* height: calc(100% - 41.6px); */
   padding: 10px;
   background: #fff;
 }
