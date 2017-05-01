@@ -41,79 +41,10 @@ var flickrPhotos = ko.observableArray([]);
 
 
 function initMap() {
-  // Create a styles array to use with the map.
-  var styles = [
-    {
-      featureType: "water",
-      stylers: [
-        { color: "#19a0d8" }
-      ]
-    },{
-      featureType: "administrative",
-      elementType: "labels.text.stroke",
-      stylers: [
-        { color: "#ffffff" },
-        { weight: 6 }
-      ]
-    },{
-      featureType: "administrative",
-      elementType: "labels.text.fill",
-      stylers: [
-        { color: "#e85113" }
-      ]
-    },{
-      featureType: "road.highway",
-      elementType: "geometry.stroke",
-      stylers: [
-        { color: "#efe9e4" },
-        { lightness: -40 }
-      ]
-    },{
-      featureType: "transit.station",
-      stylers: [
-        { weight: 9 },
-        { hue: "#e85113" }
-      ]
-    },{
-      featureType: "road.highway",
-      elementType: "labels.icon",
-      stylers: [
-        { visibility: "off" }
-      ]
-    },{
-      featureType: "water",
-      elementType: "labels.text.stroke",
-      stylers: [
-        { lightness: 100 }
-      ]
-    },{
-      featureType: "water",
-      elementType: "labels.text.fill",
-      stylers: [
-        { lightness: -100 }
-      ]
-    },{
-      featureType: "poi",
-      elementType: "geometry",
-      stylers: [
-        { visibility: "on" },
-        { color: "#f0e4d3" }
-      ]
-    },{
-      featureType: "road.highway",
-      elementType: "geometry.fill",
-      stylers: [
-        { color: "#efe9e4" },
-        { lightness: -25 }
-      ]
-    }
-  ];
-
   // Create the map:
   map = new google.maps.Map(document.getElementById("map"), {
     center: {lat: 41.8781, lng: -87.6298},
     zoom: 13,
-    // styles: styles,
     mapTypeControl: false
   });
 
@@ -265,11 +196,6 @@ function populateInfoWindow(marker, infowindow) {
   }
 }
 
-
-
-
-
-// Deal with case where resources are not found (one or the other not found or neither found).
 
 
 function showResourcePanel(title) {
@@ -477,7 +403,7 @@ ko.applyBindings(myViewModel);
 
 
 
-var slider = $("#flickr-list");                     // slider = ul element
+var slider = $("#flickr-list");   // slider = ul element
 var leftProperty, newleftProperty;
 var sliderWorking = false;
 
@@ -522,51 +448,32 @@ $("#left-btn").click(function() {
 });
 
 $("#rsc-close").click(function() {
-  $("#rsc-container").attr("class","hidden");
-  $("#wiki-list").empty();
-  $("#flickr-list").empty();
+  $("#rsc-container").attr("class","hidden"); 
+  flickrPhotos.removeAll();
+  wikiLinks.removeAll();
 })
 
 
 
 
 
-
-
-
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
-  if(document.querySelectorAll("#map").length > 0) {
-    if(document.querySelector("html").lang) {
-      lang = document.querySelector("html").lang;
-    } else {
-      lang = "en";
-    }
-
-    // var js_file = document.createElement("script");
-    // js_file.type = "text/javascript";
-    // js_file.async = true;
-    // js_file.defer = true;
-    // js_file.src = "https://maps.googleapis.com/maps/api/js?libraries=places&key=" +
-                    // maps_api_key + "&callback=initMap&language=" + lang;
-    // document.getElementsByTagName("head")[0].appendChild(js_file);
-
-    $.ajax({
-      url: "https://maps.googleapis.com/maps/api/js?libraries=places&key=" +
-              maps_api_key + "&callback=initMap&language=" + lang,
-      dataType: "script",
-      async: true,
-      success: function() {
-      }
-    }).fail(function() {
-      $("#map").append("<h3 class='error'>Unfortunately, we were unable to load Google Maps.</h3>" +
-                       "<h3 class='error'>Please try again later.</h3>");
-    });;
-
+  var lang;
+  if(document.querySelector("html").lang) {
+    lang = document.querySelector("html").lang;
+  } else {
+    lang = "en";
   }
+
+  $.ajax({
+    url: "https://maps.googleapis.com/maps/api/js?libraries=places&key=" +
+            maps_api_key + "&callback=initMap&language=" + lang,
+    dataType: "script",
+    async: true,
+    success: function() {
+    }
+  }).fail(function() {
+    $("#map").append("<h3 class='error'>Unfortunately, we were unable to load Google Maps.</h3>" +
+                     "<h3 class='error'>Please try again later.</h3>");
+  });;
 });
