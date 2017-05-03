@@ -198,7 +198,59 @@ function populateInfoWindow(marker, infowindow) {
 
 
 
+var slider = $("#flickr-list");   // slider = ul element
+var leftProperty, newleftProperty;
+var sliderWorking = false;
+
+// the click event handler for the right button
+$("#right-btn").click(function() {
+  if(!sliderWorking) {
+    sliderWorking = true;
+
+    // Get current value of left property:
+    leftProperty = parseInt(slider.css("left"));
+    
+    // Figure out the new left property:
+    if(leftProperty - 155 > -155*flickrPhotos().length) {
+      newLeftProperty = leftProperty - 155;
+    }
+
+    // Animate the movement of the panel:
+    slider.animate({left: newLeftProperty}, 800, function() {
+      sliderWorking = false;
+    });
+  }
+});
+
+// the click event handler for the left button
+$("#left-btn").click(function() {
+  if(!sliderWorking) {
+    sliderWorking = true;
+
+    // Get current value of left property:
+    leftProperty = parseInt(slider.css("left"));
+
+    // Figure out the new left property:
+    if(leftProperty < 0) {
+      newLeftProperty = leftProperty + 155;
+    }
+
+    // Animate the movement of the panel:
+    slider.animate( {left: newLeftProperty}, 800, function() {
+      sliderWorking = false;
+    });
+  }
+});
+
+$("#rsc-close").click(function() {
+  $("#map").height("calc(100vh - 40px)");
+  $("#rsc-container").attr("class","hidden"); 
+  flickrPhotos.removeAll();
+  wikiLinks.removeAll();
+})
+
 function showResourcePanel(title) {
+  $("#map").height("calc(100vh - 40px - " + $("#rsc-container").height() + "px");
   $("#rsc-container").removeClass("hidden");
   $("#rsc-location-name").text(title);
 
@@ -403,55 +455,6 @@ ko.applyBindings(myViewModel);
 
 
 
-var slider = $("#flickr-list");   // slider = ul element
-var leftProperty, newleftProperty;
-var sliderWorking = false;
-
-// the click event handler for the right button
-$("#right-btn").click(function() {
-  if(!sliderWorking) {
-    sliderWorking = true;
-
-    // Get current value of left property:
-    leftProperty = parseInt(slider.css("left"));
-    
-    // Figure out the new left property:
-    if(leftProperty - 155 > -155*flickrPhotos().length) {
-      newLeftProperty = leftProperty - 155;
-    }
-
-    // Animate the movement of the panel:
-    slider.animate({left: newLeftProperty}, 800, function() {
-      sliderWorking = false;
-    });
-  }
-});
-
-// the click event handler for the left button
-$("#left-btn").click(function() {
-  if(!sliderWorking) {
-    sliderWorking = true;
-
-    // Get current value of left property:
-    leftProperty = parseInt(slider.css("left"));
-
-    // Figure out the new left property:
-    if(leftProperty < 0) {
-      newLeftProperty = leftProperty + 155;
-    }
-
-    // Animate the movement of the panel:
-    slider.animate( {left: newLeftProperty}, 800, function() {
-      sliderWorking = false;
-    });
-  }
-});
-
-$("#rsc-close").click(function() {
-  $("#rsc-container").attr("class","hidden"); 
-  flickrPhotos.removeAll();
-  wikiLinks.removeAll();
-})
 
 
 
