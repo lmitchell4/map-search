@@ -9,6 +9,7 @@ var model = {
     // {title: "Museum of Contemporary Art", location: {lat: 41.8972116, lng: -87.62107069999999}},
     // {title: "Navy Pier", location: {lat: 41.891731, lng: -87.60225869999999}},
     // {title: "Wrigley Field", location: {lat: 41.9474536, lng: -87.6561341}},
+    
     {title: "Shedd Aquarium", location: {lat: 41.8676217, lng: -87.6136616}},
     {title: "Lincoln Park Zoo", location: {lat: 41.9211, lng: -87.6340}},
     {title: "Field Museum of Natural History", location: {lat: 41.8661733, lng: -87.61698620000001}},
@@ -26,6 +27,7 @@ var map;
 
 // Array for location markers on the map:
 var markers = [];
+var markersVisible = false;
 
 // Array for location list:
 var allLocations = ko.observableArray([]);
@@ -92,12 +94,8 @@ function initMap() {
     } );
   }
 
-  document.getElementById("show-listings").addEventListener("click", showListings);
-  document.getElementById("hide-listings").addEventListener("click", function() {
-    hideMarkers(markers);
-  });
-
-  showListings();
+  document.getElementById("toggle-listings").addEventListener("click", toggleListings);  
+  toggleListings();
 }
 
 
@@ -352,28 +350,36 @@ function showResourcePanel(title) {
 
 
 
-
-
-
-
-
 // Display the locations in the list and on the map:
-function showListings() {
-  var bounds = new google.maps.LatLngBounds();
-  // Extend the boundaries of the map for each marker and display the marker
-  for(var i=0; i < markers.length; i++) {
-    markers[i].setMap(map);
-    bounds.extend(markers[i].position);
+function toggleListings() {
+  if(markersVisible) {
+    // Hide the markers:
+    for(var i=0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+    $("#toggle-listings").val("Show Locations");
+    markersVisible = false;
+  } else {
+    // Show the markers:
+    var bounds = new google.maps.LatLngBounds();
+    // Extend the boundaries of the map for each marker and display the marker
+    for(var i=0; i < markers.length; i++) {
+      markers[i].setMap(map);
+      bounds.extend(markers[i].position);
+    }
+    map.fitBounds(bounds);
+    $("#toggle-listings").val("Hide Locations");
+    markersVisible = true;
   }
-  map.fitBounds(bounds);
 }
 
-// This function will loop through the listings and hide them all.
-function hideMarkers(markers) {
-  for(var i=0; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
-}
+// // // This function will loop through the listings and hide them all.
+// // function hideMarkers(markers) {
+  // // for(var i=0; i < markers.length; i++) {
+    // // markers[i].setMap(null);
+  // // }
+// // }
+
 
 // This function takes in a COLOR, and then creates a new marker
 // icon of that color. The icon will be 21 px wide by 34 high, have an origin

@@ -22,13 +22,14 @@
             <h1>Plan your trip to Chicago</h1>
             <div>
               <input data-bind="textInput: filterCriteria" id="filter-input" type="text" value=""/>
-              <p id="filter-label">Filter</p>
+              <span class="glyphicon glyphicon-filter"></span><p id="filter-label">Filter</p>
+              <!-- <p class="glyphicon glyphicon-filter">Filter</p> -->
               <ul data-bind="foreach: filteredLocations" id="listings-list">
                 <li><a data-bind="text: $data.title, click: $parent.clickListItem, event: { mouseover: $parent.mouseOverListItem, mouseout: $parent.mouseOutListItem }"></a></li>
               </ul>
-              <div id="id"></div>
-              <input id="show-listings" type="button" value="Show Listings">
-              <input id="hide-listings" type="button" value="Hide Listings">
+              <div id="toggle-div">
+                <input id="toggle-listings" type="button" value="Hide Locations">
+              </div>
             </div>
             <hr>
           </div>
