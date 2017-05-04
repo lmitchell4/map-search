@@ -72,8 +72,10 @@ hr {
 /* } */
 
 #filter-div {
-  text-align: center;
-  height: 40px;
+  display: inline;
+  /* background-color: #9400D3; */
+  /* text-align: center; */
+  /* height: 40px; */
 }
 
 #filter-input {
