@@ -4,17 +4,12 @@ var model = {
   // Normally they would be in a database.
   locations: [
     {title: "Museum of Science and Industry", location: {lat: 41.7906088, lng: -87.5830586}},
-    // {title: "National Museum of Mexican Art", location: {lat: 41.8561698, lng: -87.6729641}},
     {title: "Museum of Contemporary Art", location: {lat: 41.8972116, lng: -87.62107069999999}},
-    // {title: "Navy Pier", location: {lat: 41.891731, lng: -87.60225869999999}},
-    // {title: "Wrigley Field", location: {lat: 41.9474536, lng: -87.6561341}},
-
     {title: "Shedd Aquarium", location: {lat: 41.8676217, lng: -87.6136616}},
     {title: "Lincoln Park Zoo", location: {lat: 41.9211, lng: -87.6340}},
     {title: "Field Museum of Natural History", location: {lat: 41.8661733, lng: -87.61698620000001}},
     {title: "Art Institute of Chicago", location: {lat: 41.879347, lng: -87.621228}},
     {title: "Chicago History Museum", location: {lat: 41.9119691, lng: -87.6315025}},
-    // {title: "International Museum of Surgical Science", location: {lat: 41.910275, lng: -87.62661969999999}},
     {title: "Adler Planetarium", location: {lat: 41.8663557, lng: -87.60661159999999}},
     {title: "Soldier Field", location: {lat: 41.8622646, lng: -87.61663820000001}}
   ]
@@ -191,7 +186,7 @@ var viewMapConstructor = function() {
     }
 
     document.getElementById("toggle-listings").addEventListener("click",
-                                                      self.toggleListings);
+      self.toggleListings);
     self.toggleListings();
   };
 
@@ -309,7 +304,6 @@ var viewMapConstructor = function() {
       },
       dataType: "jsonp",
       timeout: 6000,
-      // jsonp: "callback",
       success: function(data) {
         var articles = data.query.search;
 
@@ -339,7 +333,6 @@ var viewMapConstructor = function() {
         nojsoncallback: "1",
         extras: "owner_name"
       },
-      // dataType: "jsonp",
       dataType: "json",
       timeout: 6000,
       success: function(data) {
