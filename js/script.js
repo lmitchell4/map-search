@@ -1,3 +1,4 @@
+// $(function(){
 
 var model = {
   // Hard code the locations of interest for now.
@@ -22,7 +23,7 @@ var model = {
 }
 
 
-var ViewModel = function() {
+var ViewModelConstructor = function() {
   var self = this;
 
   // Array for location markers on the map:
@@ -81,14 +82,12 @@ var ViewModel = function() {
   };
 }
 
-var myViewModel = new ViewModel();
-myViewModel.init();
-ko.applyBindings(myViewModel);
 
 
-
-var viewMap = {
-  init: function() {
+var viewMapConstructor = function() {
+  var self = this;
+  
+  self.init = function() {
     this.map;
     this.timer;   // Timer for marker animation
     this.sliderWorking = false;
@@ -102,7 +101,7 @@ var viewMap = {
         var leftProperty = parseInt(slider.css("left"));
         
         // Figure out the new left property:
-        if(leftProperty - 155 > -155*myViewModel.flickrPhotos().length) {
+        if(leftProperty - 155 > -155*viewModel.flickrPhotos().length) {
           var newLeftProperty = leftProperty - 155;
 
           // Animate the movement of the panel:
@@ -136,12 +135,12 @@ var viewMap = {
     $("#rsc-close").click(function() {
       $("#map").height("calc(100vh - 40px)");
       $("#rsc-container").attr("class","hidden"); 
-      myViewModel.flickrPhotos.removeAll();
-      myViewModel.wikiLinks.removeAll();
+      viewModel.flickrPhotos.removeAll();
+      viewModel.wikiLinks.removeAll();
     })
-  },
+  };
 
-  renderMap: function() {
+  self.renderMap = function() {
     // Create the map:
     this.map = new google.maps.Map(document.getElementById("map"), {
       center: {lat: 41.8781, lng: -87.6298},
@@ -149,7 +148,7 @@ var viewMap = {
       mapTypeControl: false
     });
 
-    var locations = myViewModel.getLocations();
+    var locations = viewModel.getLocations();
 
     // Set styles for the markers:
     var defaultIcon = this.makeMarkerIcon("0091ff");
@@ -173,20 +172,20 @@ var viewMap = {
       });
 
       // Push the marker to our array of markers.
-      myViewModel.markers.push(marker);
+      viewModel.markers.push(marker);
 
       // The click, mouseover, and mouseout event listeners on markers look
       // like standard DOM events, but are actually part of the
       // Maps JavaScript API.
 
       // Open an infowindow when the marker is clicked.
-      marker.addListener("click", function() {this.clickMarker(this)});
+      marker.addListener("click", function() {self.clickMarker(this)});
 
       // Change marker color when mousing over it.
-      marker.addListener("mouseover", function() {this.highlightMarker(this)});
-      marker.addListener("mouseout", function() {this.unhighlightMarker(this)});
+      marker.addListener("mouseover", function() {self.highlightMarker(this)});
+      marker.addListener("mouseout", function() {self.unhighlightMarker(this)});
 
-      myViewModel.allLocations.push( {
+      viewModel.allLocations.push( {
         title: marker.title,
         marker_id: marker.id
       } );
@@ -195,10 +194,10 @@ var viewMap = {
     document.getElementById("toggle-listings").addEventListener("click", 
                                                       this.toggleListings);  
     this.toggleListings();
-  },
+  };
 
 
-  clickMarker: function(marker) {
+  self.clickMarker = function(marker) {
     var largeInfowindow = new google.maps.InfoWindow();
 
     marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -207,25 +206,25 @@ var viewMap = {
       marker.setAnimation(null);
     }, 750);
     this.populateInfoWindow(marker, largeInfowindow);
-  },
+  };
 
 
-  highlightMarker: function(marker) {
+  self.highlightMarker = function(marker) {
     // Change the marker color from the default:
     var highlightedIcon = this.makeMarkerIcon("9400D3");
     marker.setIcon(highlightedIcon);
-  },
+  };
 
 
-  unhighlightMarker: function(marker) {
+  self.unhighlightMarker = function(marker) {
     // Return to normal marker color:
     var defaultIcon = this.makeMarkerIcon("0091ff");
     marker.setIcon(defaultIcon);
-  },
+  };
 
 
   // Populate the infowindow when the marker is clicked:
-  populateInfoWindow: function(marker, infowindow) {
+  self.populateInfoWindow = function(marker, infowindow) {
     
     // Check that the infowindow for this marker is not already open:
     if(!marker.infoWindowOpen) {
@@ -268,7 +267,7 @@ var viewMap = {
             document.getElementById(pano_id), panoramaOptions);
           
           $("#" + marker.id).click(function() {
-            this.showResourcePanel(marker.title)
+            self.showResourcePanel(marker.title)
           });
 
 
@@ -284,11 +283,11 @@ var viewMap = {
       streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
 
       // Open the infowindow on the correct marker:
-      infowindow.open(map, marker);
+      infowindow.open(this.map, marker);
     }
-  },
+  };
 
-  showResourcePanel: function(title) {
+  self.showResourcePanel= function(title) {
     $("#map").height("calc(100vh - 40px - " + $("#rsc-container").height() + "px");
     $("#rsc-container").removeClass("hidden");
     $("#rsc-location-name").text(title);
@@ -297,8 +296,8 @@ var viewMap = {
     $("#flickr-list").css("left",0);
     
     // Clear the observableArrays each time this function is run.
-    myViewModel.flickrPhotos.removeAll();
-    myViewModel.wikiLinks.removeAll();
+    viewModel.flickrPhotos.removeAll();
+    viewModel.wikiLinks.removeAll();
 
     // Load Wikipedia resources:
     $.ajax({
@@ -316,7 +315,7 @@ var viewMap = {
         var articles = data.query.search;
 
         for(var i = 0; i < Math.min(5,articles.length); i++) {
-          myViewModel.wikiLinks.push( {
+          viewModel.wikiLinks.push( {
             title: articles[i].title,
             url: "http://en.wikipedia.org/wiki/" + articles[i].title
           } );
@@ -350,7 +349,7 @@ var viewMap = {
         
         for(var i = 0; i < Math.min(10,photos.length); i++) {
           photo = photos[i];
-          myViewModel.flickrPhotos.push( {
+          viewModel.flickrPhotos.push( {
             src: "https://farm" + photo.farm + ".staticflickr.com/" + 
                   photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg",
             url: "http://flickr.com/photos/" + photo.owner + "/" + photo.id
@@ -360,35 +359,35 @@ var viewMap = {
     }).fail(function() {
       console.log("Unable to load flickr resources.");
     });
-  },
+  };
 
   // Display the locations in the list and on the map:
-  toggleListings: function() {
-    if(markersVisible) {
+  self.toggleListings = function() {
+    if(viewModel.markersVisible) {
       // Hide the markers:
-      for(var i=0; i < myViewModel.markers.length; i++) {
-        myViewModel.markers[i].setMap(null);
+      for(var i=0; i < viewModel.markers.length; i++) {
+        viewModel.markers[i].setMap(null);
       }
       $("#toggle-listings").val("Show Locations");
-      markersVisible = false;
+      viewModel.markersVisible = false;
     } else {
       // Show the markers:
       var bounds = new google.maps.LatLngBounds();
       // Extend the boundaries of the map for each marker and display the marker
-      for(var i=0; i < myViewModel.markers.length; i++) {
-        myViewModel.markers[i].setMap(map);
-        bounds.extend(myViewModel.markers[i].position);
+      for(var i=0; i < viewModel.markers.length; i++) {
+        viewModel.markers[i].setMap(this.map);
+        bounds.extend(viewModel.markers[i].position);
       }
-      map.fitBounds(bounds);
+      this.map.fitBounds(bounds);
       $("#toggle-listings").val("Hide Locations");
-      markersVisible = true;
+      viewModel.markersVisible = true;
     }
-  },
+  };
 
   // This function takes in a COLOR, and then creates a new marker
   // icon of that color. The icon will be 21 px wide by 34 high, have an origin
   // of 0, 0 and be anchored at 10, 34).
-  makeMarkerIcon: function(markerColor) {
+  self.makeMarkerIcon = function(markerColor) {
     var markerImage = new google.maps.MarkerImage(
       "http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|"+ markerColor +
       "|40|_|%E2%80%A2",
@@ -399,6 +398,16 @@ var viewMap = {
     return markerImage;
   }
 };
+
+
+
+// // // Separate views for list and map?
+
+var viewMap = new viewMapConstructor();
+var viewModel = new ViewModelConstructor();
+
+viewModel.init();
+ko.applyBindings(viewModel);
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -421,3 +430,7 @@ document.addEventListener("DOMContentLoaded", function () {
                      "<h3 class='error'>Please try again later.</h3>");
   });;
 });
+
+
+
+// });
