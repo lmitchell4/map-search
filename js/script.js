@@ -88,6 +88,7 @@ var viewMapConstructor = function() {
   self.init = function() {
     self.map;
     self.timer;   // Timer for marker animation
+    self.slider = $("#flickr-list");   // slider = ul element
     self.sliderWorking = false;
 
     // the click event handler for the right button
@@ -96,14 +97,14 @@ var viewMapConstructor = function() {
         self.sliderWorking = true;
 
         // Get current value of left property:
-        var leftProperty = parseInt(slider.css("left"));
+        var leftProperty = parseInt(self.slider.css("left"));
 
         // Figure out the new left property:
         if(leftProperty - 155 > -155*viewModel.flickrPhotos().length) {
           var newLeftProperty = leftProperty - 155;
 
           // Animate the movement of the panel:
-          slider.animate({left: newLeftProperty}, 800, function() {
+          self.slider.animate({left: newLeftProperty}, 800, function() {
             self.sliderWorking = false;
           });
         }
@@ -116,14 +117,14 @@ var viewMapConstructor = function() {
         self.sliderWorking = true;
 
         // Get current value of left property:
-        var leftProperty = parseInt(slider.css("left"));
+        var leftProperty = parseInt(self.slider.css("left"));
 
         // Figure out the new left property:
         if(leftProperty < 0) {
           var newLeftProperty = leftProperty + 155;
 
           // Animate the movement of the panel:
-          slider.animate( {left: newLeftProperty}, 800, function() {
+          self.slider.animate( {left: newLeftProperty}, 800, function() {
             self.sliderWorking = false;
           });
         }
