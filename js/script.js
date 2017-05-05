@@ -1,22 +1,20 @@
-// $(function(){
 
 var model = {
   // Hard code the locations of interest for now.
   // Normally they would be in a database.
   locations: [
-    // {title: "Brookfield Zoo", location: {lat: 41.8350288, lng: -87.83363030000001}},
-    // {title: "Museum of Science and Industry", location: {lat: 41.7906088, lng: -87.5830586}},
+    {title: "Museum of Science and Industry", location: {lat: 41.7906088, lng: -87.5830586}},
     // {title: "National Museum of Mexican Art", location: {lat: 41.8561698, lng: -87.6729641}},
-    // {title: "Museum of Contemporary Art", location: {lat: 41.8972116, lng: -87.62107069999999}},
+    {title: "Museum of Contemporary Art", location: {lat: 41.8972116, lng: -87.62107069999999}},
     // {title: "Navy Pier", location: {lat: 41.891731, lng: -87.60225869999999}},
     // {title: "Wrigley Field", location: {lat: 41.9474536, lng: -87.6561341}},
-    
+
     {title: "Shedd Aquarium", location: {lat: 41.8676217, lng: -87.6136616}},
     {title: "Lincoln Park Zoo", location: {lat: 41.9211, lng: -87.6340}},
     {title: "Field Museum of Natural History", location: {lat: 41.8661733, lng: -87.61698620000001}},
     {title: "Art Institute of Chicago", location: {lat: 41.879347, lng: -87.621228}},
     {title: "Chicago History Museum", location: {lat: 41.9119691, lng: -87.6315025}},
-    {title: "International Museum of Surgical Science", location: {lat: 41.910275, lng: -87.62661969999999}},
+    // {title: "International Museum of Surgical Science", location: {lat: 41.910275, lng: -87.62661969999999}},
     {title: "Adler Planetarium", location: {lat: 41.8663557, lng: -87.60661159999999}},
     {title: "Soldier Field", location: {lat: 41.8622646, lng: -87.61663820000001}}
   ]
@@ -29,7 +27,7 @@ var ViewModelConstructor = function() {
   // Array for location markers on the map:
   self.markers = [];
   self.markersVisible = false;
-  
+
   self.allLocations = ko.observableArray([]); // Array for location list
   self.wikiLinks = ko.observableArray([]);    // Wiki links
   self.flickrPhotos = ko.observableArray([]); // flickr photos
@@ -76,7 +74,7 @@ var ViewModelConstructor = function() {
       });
     }
   });
-  
+
   self.init = function() {
     viewMap.init();
   };
@@ -86,27 +84,27 @@ var ViewModelConstructor = function() {
 
 var viewMapConstructor = function() {
   var self = this;
-  
+
   self.init = function() {
-    this.map;
-    this.timer;   // Timer for marker animation
-    this.sliderWorking = false;
+    self.map;
+    self.timer;   // Timer for marker animation
+    self.sliderWorking = false;
 
     // the click event handler for the right button
     $("#right-btn").click(function() {
-      if(!sliderWorking) {
-        sliderWorking = true;
+      if(!self.sliderWorking) {
+        self.sliderWorking = true;
 
         // Get current value of left property:
         var leftProperty = parseInt(slider.css("left"));
-        
+
         // Figure out the new left property:
         if(leftProperty - 155 > -155*viewModel.flickrPhotos().length) {
           var newLeftProperty = leftProperty - 155;
 
           // Animate the movement of the panel:
           slider.animate({left: newLeftProperty}, 800, function() {
-            sliderWorking = false;
+            self.sliderWorking = false;
           });
         }
       }
@@ -114,8 +112,8 @@ var viewMapConstructor = function() {
 
     // the click event handler for the left button
     $("#left-btn").click(function() {
-      if(!sliderWorking) {
-        sliderWorking = true;
+      if(!self.sliderWorking) {
+        self.sliderWorking = true;
 
         // Get current value of left property:
         var leftProperty = parseInt(slider.css("left"));
@@ -126,7 +124,7 @@ var viewMapConstructor = function() {
 
           // Animate the movement of the panel:
           slider.animate( {left: newLeftProperty}, 800, function() {
-            sliderWorking = false;
+            self.sliderWorking = false;
           });
         }
       }
@@ -134,7 +132,7 @@ var viewMapConstructor = function() {
 
     $("#rsc-close").click(function() {
       $("#map").height("calc(100vh - 40px)");
-      $("#rsc-container").attr("class","hidden"); 
+      $("#rsc-container").attr("class","hidden");
       viewModel.flickrPhotos.removeAll();
       viewModel.wikiLinks.removeAll();
     })
@@ -142,7 +140,7 @@ var viewMapConstructor = function() {
 
   self.renderMap = function() {
     // Create the map:
-    this.map = new google.maps.Map(document.getElementById("map"), {
+    self.map = new google.maps.Map(document.getElementById("map"), {
       center: {lat: 41.8781, lng: -87.6298},
       zoom: 13,
       mapTypeControl: false
@@ -151,7 +149,7 @@ var viewMapConstructor = function() {
     var locations = viewModel.getLocations();
 
     // Set styles for the markers:
-    var defaultIcon = this.makeMarkerIcon("0091ff");
+    var defaultIcon = self.makeMarkerIcon("0091ff");
 
     // Create the markers:
     for(var i = 0; i < locations.length; i++) {
@@ -191,9 +189,9 @@ var viewMapConstructor = function() {
       } );
     }
 
-    document.getElementById("toggle-listings").addEventListener("click", 
-                                                      this.toggleListings);  
-    this.toggleListings();
+    document.getElementById("toggle-listings").addEventListener("click",
+                                                      self.toggleListings);
+    self.toggleListings();
   };
 
 
@@ -201,41 +199,41 @@ var viewMapConstructor = function() {
     var largeInfowindow = new google.maps.InfoWindow();
 
     marker.setAnimation(google.maps.Animation.BOUNCE);
-    clearTimeout(this.timer);
-    this.timer = setTimeout(function() {
+    clearTimeout(self.timer);
+    self.timer = setTimeout(function() {
       marker.setAnimation(null);
     }, 750);
-    this.populateInfoWindow(marker, largeInfowindow);
+    self.populateInfoWindow(marker, largeInfowindow);
   };
 
 
   self.highlightMarker = function(marker) {
     // Change the marker color from the default:
-    var highlightedIcon = this.makeMarkerIcon("9400D3");
+    var highlightedIcon = self.makeMarkerIcon("9400D3");
     marker.setIcon(highlightedIcon);
   };
 
 
   self.unhighlightMarker = function(marker) {
     // Return to normal marker color:
-    var defaultIcon = this.makeMarkerIcon("0091ff");
+    var defaultIcon = self.makeMarkerIcon("0091ff");
     marker.setIcon(defaultIcon);
   };
 
 
   // Populate the infowindow when the marker is clicked:
   self.populateInfoWindow = function(marker, infowindow) {
-    
+
     // Check that the infowindow for this marker is not already open:
     if(!marker.infoWindowOpen) {
       marker.infoWindowOpen = true;
 
       infowindow.addListener("closeclick", function() {
         // Reset this property when infowindow is closed:
-        
+
         // $("#rsc-container").attr("class", "hidden");
         marker.infoWindowOpen = false;
-        
+
       });
 
       // In case the status is OK, which means the pano was found, compute the
@@ -265,7 +263,7 @@ var viewMapConstructor = function() {
           };
           var panorama = new google.maps.StreetViewPanorama(
             document.getElementById(pano_id), panoramaOptions);
-          
+
           $("#" + marker.id).click(function() {
             self.showResourcePanel(marker.title)
           });
@@ -283,7 +281,7 @@ var viewMapConstructor = function() {
       streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
 
       // Open the infowindow on the correct marker:
-      infowindow.open(this.map, marker);
+      infowindow.open(self.map, marker);
     }
   };
 
@@ -294,7 +292,7 @@ var viewMapConstructor = function() {
 
     // Reset the location of the photo slider each time this function runs:
     $("#flickr-list").css("left",0);
-    
+
     // Clear the observableArrays each time this function is run.
     viewModel.flickrPhotos.removeAll();
     viewModel.wikiLinks.removeAll();
@@ -315,10 +313,10 @@ var viewMapConstructor = function() {
         var articles = data.query.search;
 
         for(var i = 0; i < Math.min(5,articles.length); i++) {
-          viewModel.wikiLinks.push( {
+          viewModel.wikiLinks.push({
             title: articles[i].title,
             url: "http://en.wikipedia.org/wiki/" + articles[i].title
-          } );
+          });
         }
       }
     }).fail(function() {
@@ -346,11 +344,11 @@ var viewMapConstructor = function() {
       success: function(data) {
         var photos = data.photos.photo;
         var photo;
-        
+
         for(var i = 0; i < Math.min(10,photos.length); i++) {
           photo = photos[i];
           viewModel.flickrPhotos.push( {
-            src: "https://farm" + photo.farm + ".staticflickr.com/" + 
+            src: "https://farm" + photo.farm + ".staticflickr.com/" +
                   photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg",
             url: "http://flickr.com/photos/" + photo.owner + "/" + photo.id
           } );
@@ -375,10 +373,10 @@ var viewMapConstructor = function() {
       var bounds = new google.maps.LatLngBounds();
       // Extend the boundaries of the map for each marker and display the marker
       for(var i=0; i < viewModel.markers.length; i++) {
-        viewModel.markers[i].setMap(this.map);
+        viewModel.markers[i].setMap(self.map);
         bounds.extend(viewModel.markers[i].position);
       }
-      this.map.fitBounds(bounds);
+      self.map.fitBounds(bounds);
       $("#toggle-listings").val("Hide Locations");
       viewModel.markersVisible = true;
     }
@@ -399,9 +397,6 @@ var viewMapConstructor = function() {
   }
 };
 
-
-
-// // // Separate views for list and map?
 
 var viewMap = new viewMapConstructor();
 var viewModel = new ViewModelConstructor();
@@ -431,6 +426,3 @@ document.addEventListener("DOMContentLoaded", function () {
   });;
 });
 
-
-
-// });
