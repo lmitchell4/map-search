@@ -9,6 +9,7 @@ to let the user explore points of interest in Chicago. It uses the
 [Knockout](http://knockoutjs.com/) library and [Bootstrap](http://getbootstrap.com/)
  framework. 
 
+This project started with base code from the [Udacity GitHub account](https://github.com/udacity/ud864).
 
 ### Installation
 
