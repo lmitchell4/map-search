@@ -102,6 +102,8 @@ var viewMapConstructor = function() {
           self.slider.animate({left: leftProperty}, 800, function() {
             self.sliderWorking = false;
           });
+        } else {
+          self.sliderWorking = false;
         }
       }
     });
@@ -122,6 +124,8 @@ var viewMapConstructor = function() {
           self.slider.animate( {left: leftProperty}, 800, function() {
             self.sliderWorking = false;
           });
+        } else {
+          self.sliderWorking = false;
         }
       }
     });
