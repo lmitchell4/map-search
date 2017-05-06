@@ -286,9 +286,11 @@ var viewMapConstructor = function() {
   };
 
   self.showResourcePanel= function(title) {
+    $("#rsc-location-name").text(title);
+    $("#wiki-error").attr("class","hidden");
+    $("#flickr-error").attr("class","hidden");
     $("#map").height("calc(100vh - 40px - " + $("#rsc-container").height() + "px");
     $("#rsc-container").removeClass("hidden");
-    $("#rsc-location-name").text(title);
 
     // Reset the location of the photo slider each time this function runs:
     $("#flickr-list").css("left",0);
@@ -307,7 +309,7 @@ var viewMapConstructor = function() {
         format: "json"
       },
       dataType: "jsonp",
-      timeout: 6000,
+      timeout: 2000,
       success: function(data) {
         var articles = data.query.search;
 
@@ -319,6 +321,7 @@ var viewMapConstructor = function() {
         }
       }
     }).fail(function() {
+      $("#wiki-error").removeClass("hidden");
       console.log("Unable to load Wikipedia resources.");
     });
 
@@ -338,7 +341,7 @@ var viewMapConstructor = function() {
         extras: "owner_name"
       },
       dataType: "json",
-      timeout: 6000,
+      timeout: 2000,
       success: function(data) {
         var photos = data.photos.photo;
         var photo;
@@ -353,6 +356,7 @@ var viewMapConstructor = function() {
         }
       }
     }).fail(function() {
+      $("#flickr-error").removeClass("hidden");      
       console.log("Unable to load flickr resources.");
     });
   };
