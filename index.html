@@ -26,7 +26,6 @@
                 <span class="glyphicon glyphicon-filter"></span>
                 <p id="filter-label">Filter</p>
               </div>
-              <!-- <p class="glyphicon glyphicon-filter">Filter</p> -->
               <ul data-bind="foreach: filteredLocations" id="listings-list">
                 <li><a data-bind="text: $data.title, click: $parent.clickListItem, event: { mouseover: $parent.mouseOverListItem, mouseout: $parent.mouseOutListItem }"></a></li>
               </ul>
@@ -74,7 +73,7 @@
                     <div data-bind="visible: flickrPhotos().length == 0">
                       <p>Sorry, we are unable to load flickr photos at this time.</p>
                     </div>
-                    <div data-bind="visible: flickrPhotos().length > 0">                  
+                    <div data-bind="visible: flickrPhotos().length > 0">
                       <p>Check out these related photos from <a href='https://www.flickr.com/' target='_blank'>flickr</a>:</p>
                       <div id="display-panel">
                         <ul data-bind="foreach: flickrPhotos" id="flickr-list">
