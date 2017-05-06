@@ -96,10 +96,10 @@ var viewMapConstructor = function() {
 
         // Figure out the new left property:
         if(leftProperty - 155 > -155*viewModel.flickrPhotos().length) {
-          var newLeftProperty = leftProperty - 155;
+          leftProperty -= 155;
 
           // Animate the movement of the panel:
-          self.slider.animate({left: newLeftProperty}, 800, function() {
+          self.slider.animate({left: leftProperty}, 800, function() {
             self.sliderWorking = false;
           });
         }
@@ -116,10 +116,10 @@ var viewMapConstructor = function() {
 
         // Figure out the new left property:
         if(leftProperty < 0) {
-          var newLeftProperty = leftProperty + 155;
+          leftProperty += 155;
 
           // Animate the movement of the panel:
-          self.slider.animate( {left: newLeftProperty}, 800, function() {
+          self.slider.animate( {left: leftProperty}, 800, function() {
             self.sliderWorking = false;
           });
         }
