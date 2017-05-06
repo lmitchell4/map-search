@@ -137,6 +137,7 @@ var viewMapConstructor = function() {
     })
   };
 
+  // This function has been modified from the Udacity real estate sample project.
   self.renderMap = function() {
     // Create the map:
     self.map = new google.maps.Map(document.getElementById("map"), {
@@ -220,7 +221,8 @@ var viewMapConstructor = function() {
   };
 
 
-  // Populate the infowindow when the marker is clicked:
+  // Populate the infowindow when the marker is clicked.
+  // This function has been modified from the Udacity real estate sample project.
   self.populateInfoWindow = function(marker, infowindow) {
 
     // Check that the infowindow for this marker is not already open:
@@ -352,7 +354,7 @@ var viewMapConstructor = function() {
         }
       }
     }).fail(function() {
-      $("#flickr-error").removeClass("hidden");      
+      $("#flickr-error").removeClass("hidden");
       console.log("Unable to load flickr resources.");
     });
   };
@@ -383,6 +385,7 @@ var viewMapConstructor = function() {
   // This function takes in a COLOR, and then creates a new marker
   // icon of that color. The icon will be 21 px wide by 34 high, have an origin
   // of 0, 0 and be anchored at 10, 34).
+  // This function has been modified from the Udacity real estate sample project.
   self.makeMarkerIcon = function(markerColor) {
     var markerImage = new google.maps.MarkerImage(
       "http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|"+ markerColor +
