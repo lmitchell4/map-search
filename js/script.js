@@ -58,7 +58,6 @@ var ViewModelConstructor = function() {
         self.markers[loc.marker_id].setVisible(true);
       });
       return self.allLocations();
-
     } else {
       return ko.utils.arrayFilter(self.allLocations(), function(loc) {
         // toLowerCase().indexOf(value.toLowerCase()) >= 0) would be simpler
@@ -233,14 +232,13 @@ var viewMapConstructor = function() {
 
         // $("#rsc-container").attr("class", "hidden");
         marker.infoWindowOpen = false;
-
       });
 
       // In case the status is OK, which means the pano was found, compute the
       // position of the streetview image, then calculate the heading, then get a
       // panorama from that and set the options
       function getStreetView(data, status) {
-        if (status == google.maps.StreetViewStatus.OK) {
+        if(status == google.maps.StreetViewStatus.OK) {
           var nearStreetViewLocation = data.location.latLng;
           var heading = google.maps.geometry.spherical.computeHeading(
             nearStreetViewLocation, marker.position);
@@ -267,8 +265,6 @@ var viewMapConstructor = function() {
           $("#" + marker.id).click(function() {
             self.showResourcePanel(marker.title)
           });
-
-
         } else {
           infowindow.setContent("<div>" + marker.title + "</div>" +
             "<div>No Street View Found</div>");
