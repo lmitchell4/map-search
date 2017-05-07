@@ -202,7 +202,7 @@ var viewMapConstructor = function() {
     clearTimeout(self.timer);
     self.timer = setTimeout(function() {
       marker.setAnimation(null);
-    }, 750);
+    }, 700);
     self.populateInfoWindow(marker, largeInfowindow);
   };
 
