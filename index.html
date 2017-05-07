@@ -63,8 +63,8 @@
                       <p>Check out these related articles from <a href='https://www.wikipedia.org/' target='_blank'>Wikipedia</a>:</p>
                       <ul data-bind="foreach: wikiLinks" id="wiki-list">
                         <li><a data-bind="text: $data.title, attr: {href: url}" target="_blank"></a></li>
-                      </ul>
                     </div>
+                      </ul>
                   </div>
 
                   <div id="flickr" class="tab-pane">
@@ -79,8 +79,8 @@
                         </ul>
                       </div>
                       <div>
-                        <span id="left-btn" class="img-button glyphicon glyphicon-circle-arrow-left"></span>
-                        <span id="right-btn" class="img-button glyphicon glyphicon-circle-arrow-right"></span>
+                        <span data-bind="click: function(data,event) { sliderArrow('left') }" id="left-btn" class="img-button glyphicon glyphicon-circle-arrow-left"></span>
+                        <span data-bind="click: function(data,event) { sliderArrow('right') }" id="right-btn" class="img-button glyphicon glyphicon-circle-arrow-right"></span>
                       </div>
                     </div>
                   </div>
@@ -97,7 +97,7 @@
     <script src="js/lib/jquery-3.1.1.min.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="js/api_keys.js" defer></script>
+    <script src="js/my_api_keys.js" defer></script>
     <script src="js/script.js" defer></script>
 
   </body>

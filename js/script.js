@@ -26,7 +26,7 @@ var ViewModelConstructor = function() {
   self.allLocations = ko.observableArray([]); // Array for location list
   self.wikiLinks = ko.observableArray([]);    // Wiki links
   self.flickrPhotos = ko.observableArray([]); // flickr photos
-
+  
   self.getLocations = function() {
     return model.locations;
   };
@@ -69,6 +69,9 @@ var ViewModelConstructor = function() {
     }
   });
 
+  // Handle photo slider event handling with Knockout bindings.
+  self.sliderArrow = viewMap.sliderArrow;
+
   self.init = function() {
     viewMap.init();
   };
@@ -84,51 +87,7 @@ var viewMapConstructor = function() {
     self.timer;   // Timer for marker animation
     self.slider = $("#flickr-list");   // slider = ul element
     self.sliderWorking = false;
-
-    // the click event handler for the right button
-    $("#right-btn").click(function() {
-      if(!self.sliderWorking) {
-        self.sliderWorking = true;
-
-        // Get current value of left property:
-        var leftProperty = parseInt(self.slider.css("left"));
-
-        // Figure out the new left property:
-        if(leftProperty - 155 > -155*viewModel.flickrPhotos().length) {
-          leftProperty -= 155;
-
-          // Animate the movement of the panel:
-          self.slider.animate({left: leftProperty}, 800, function() {
-            self.sliderWorking = false;
-          });
-        } else {
-          self.sliderWorking = false;
-        }
-      }
-    });
-
-    // the click event handler for the left button
-    $("#left-btn").click(function() {
-      if(!self.sliderWorking) {
-        self.sliderWorking = true;
-
-        // Get current value of left property:
-        var leftProperty = parseInt(self.slider.css("left"));
-
-        // Figure out the new left property:
-        if(leftProperty < 0) {
-          leftProperty += 155;
-
-          // Animate the movement of the panel:
-          self.slider.animate( {left: leftProperty}, 800, function() {
-            self.sliderWorking = false;
-          });
-        } else {
-          self.sliderWorking = false;
-        }
-      }
-    });
-
+    
     $("#rsc-close").click(function() {
       $("#map").height("calc(100vh - 40px)");
       $("#rsc-container").attr("class","hidden");
@@ -138,7 +97,7 @@ var viewMapConstructor = function() {
   };
 
   // This function has been modified from the Udacity real estate sample project.
-  self.renderMap = function() {
+  self.renderMap = function() {    
     // Create the map:
     self.map = new google.maps.Map(document.getElementById("map"), {
       center: {lat: 41.8781, lng: -87.6298},
@@ -395,7 +354,35 @@ var viewMapConstructor = function() {
       new google.maps.Point(10, 34),
       new google.maps.Size(21,34));
     return markerImage;
-  }
+  };
+
+  // The click event handler for the photo slider buttons:
+  self.sliderArrow = function(whichButton) {
+    if(!self.sliderWorking) {
+      self.sliderWorking = true;
+
+      var leftProperty = parseInt(self.slider.css("left"));
+      var newLeftProperty = leftProperty;
+      
+      // Figure out the new left property:
+      if(whichButton == "left" && leftProperty < 0) {
+        // Left arrow clicked.
+        newLeftProperty = leftProperty + 155;
+      } else if(whichButton == "right" && leftProperty > 155*(1 - viewModel.flickrPhotos().length)) {
+        // Right arrow clicked.
+        newLeftProperty = leftProperty - 155;
+      }
+      
+      if(newLeftProperty != leftProperty) {
+        // Animate the movement of the panel:
+        self.slider.animate( {left: newLeftProperty}, 800, function() {
+          self.sliderWorking = false;
+        });
+      } else {
+        self.sliderWorking = false;
+      }
+    }
+  };
 };
 
 
