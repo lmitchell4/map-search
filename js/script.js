@@ -152,15 +152,12 @@ var viewMapConstructor = function() {
       var title = locations[i].title;
 
       // Create a marker.
-      // infoWindowOpen is a custom property indicating whether the
-      //  marker's infowindow is open.
       var marker = new google.maps.Marker({
         position: position,
         title: title,
         animation: google.maps.Animation.DROP,
         icon: defaultIcon,
         id: i,
-        infoWindowOpen: false
       });
 
       // Push the marker to our array of markers.
