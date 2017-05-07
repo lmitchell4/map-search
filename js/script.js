@@ -94,13 +94,6 @@ var viewMapConstructor = function() {
     self.timer;   // Timer for marker animation
     self.slider = $("#flickr-list");   // slider = ul element
     self.sliderWorking = false;
-    
-    // // $("#rsc-close").click(function() {
-      // // $("#map").height("calc(100vh - 40px)");
-      // // $("#rsc-container").attr("class","hidden");
-      // // viewModel.flickrPhotos.removeAll();
-      // // viewModel.wikiLinks.removeAll();
-    // // })
   };
 
   // This function has been modified from the Udacity real estate sample project.
@@ -159,7 +152,6 @@ var viewMapConstructor = function() {
       self.toggleListings);
     self.toggleListings();
   };
-
 
   self.clickMarker = function(marker) {
     var largeInfowindow = new google.maps.InfoWindow();
@@ -250,7 +242,6 @@ var viewMapConstructor = function() {
   };
 
   self.showResourcePanel= function(title) {
-    // $("#rsc-location-name").text(title);
     viewModel.rscLocationName(title);
     $("#wiki-error").attr("class","hidden");
     $("#flickr-error").attr("class","hidden");
@@ -342,8 +333,6 @@ var viewMapConstructor = function() {
         viewModel.markers[i].setMap(null);
       }
       viewModel.toggleListingsBtnText("Show Locations");
-      
-      // // $("#toggle-listings").val("Show Locations");
       viewModel.markersVisible = false;
     } else {
       // Show the markers:
@@ -355,8 +344,6 @@ var viewMapConstructor = function() {
       }
       self.map.fitBounds(bounds);
       viewModel.toggleListingsBtnText("Hide Locations");
-      
-      // // $("#toggle-listings").val("Hide Locations");
       viewModel.markersVisible = true;
     }
   };
