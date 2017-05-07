@@ -86,6 +86,7 @@ var ViewModelConstructor = function() {
 
   self.init = function() {
     viewMap.init();
+    viewMap.renderMap();
   };
 }
 
@@ -99,10 +100,12 @@ var viewMapConstructor = function() {
     self.timer;   // Timer for marker animation
     self.slider = $("#flickr-list");   // slider = ul element
     self.sliderWorking = false;
+
+    self.infoWindow = new google.maps.InfoWindow();
   };
 
   // This function has been modified from the Udacity real estate sample project.
-  self.renderMap = function() {    
+  self.renderMap = function() {  
     // Create the map:
     self.map = new google.maps.Map(document.getElementById("map"), {
       center: {lat: 41.8781, lng: -87.6298},
@@ -157,14 +160,15 @@ var viewMapConstructor = function() {
   };
 
   self.clickMarker = function(marker) {
-    var largeInfowindow = new google.maps.InfoWindow();
+    // // var largeInfowindow = new google.maps.InfoWindow();
 
     marker.setAnimation(google.maps.Animation.BOUNCE);
     clearTimeout(self.timer);
     self.timer = setTimeout(function() {
       marker.setAnimation(null);
     }, 700);
-    self.populateInfoWindow(marker, largeInfowindow);
+    // // self.populateInfoWindow(marker, largeInfowindow);
+    self.populateInfoWindow(marker);
   };
 
 
@@ -184,18 +188,18 @@ var viewMapConstructor = function() {
 
   // Populate the infowindow when the marker is clicked.
   // This function has been modified from the Udacity real estate sample project.
-  self.populateInfoWindow = function(marker, infowindow) {
+  self.populateInfoWindow = function(marker) {
 
     // Check that the infowindow for this marker is not already open:
     if(!marker.infoWindowOpen) {
-      marker.infoWindowOpen = true;
+      // // marker.infoWindowOpen = true;     Comment out for now
 
-      infowindow.addListener("closeclick", function() {
-        // Reset this property when infowindow is closed:
+      // // self.infoWindow.addListener("closeclick", function() {
+        // // // Reset this property when infowindow is closed:
 
-        // $("#rsc-container").attr("class", "hidden");
-        marker.infoWindowOpen = false;
-      });
+        // // // $("#rsc-container").attr("class", "hidden");
+        // // marker.infoWindowOpen = false;
+      // // });
 
       // In case the status is OK, which means the pano was found, compute the
       // position of the streetview image, then calculate the heading, then get a
@@ -212,7 +216,7 @@ var viewMapConstructor = function() {
           var content = "<h4>" + marker.title + "</h4>";
           content += "<div class='pano' id='" + pano_id + "'></div><br>";
           content += "<div class='rsc-btn' id='" + marker.id + "'>Show additional resources</div>";
-          infowindow.setContent(content);
+          self.infoWindow.setContent(content);
 
           // Set up panorma picture:
           var panoramaOptions = {
@@ -229,7 +233,7 @@ var viewMapConstructor = function() {
             self.showResourcePanel(marker.title)
           });
         } else {
-          infowindow.setContent("<div>" + marker.title + "</div>" +
+          self.infoWindow.setContent("<div>" + marker.title + "</div>" +
             "<div>No Street View Found</div>");
         }
       }
@@ -240,10 +244,38 @@ var viewMapConstructor = function() {
       streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
 
       // Open the infowindow on the correct marker:
-      infowindow.open(self.map, marker);
+      self.infoWindow.open(self.map, marker);
     }
   };
 
+  
+  
+        // Sets up lone info window
+        self.infoWindowInitialize = function () {
+            var infoWindowHTML =
+                '<div id="info-window"' +
+                'data-bind="template: { name: \'info-window-template\', data: name }">' +
+                '</div>';
+
+            self.infoWindow = new google.maps.InfoWindow({
+                content: infoWindowHTML
+            });
+            var isInfoWindowLoaded = false;
+
+            /*
+             * When the info window opens, bind it to Knockout.
+             * Only do this once.
+             */
+            google.maps.event.addListener(self.infoWindow, 'domready', function () {
+                if (!isInfoWindowLoaded) {
+                    ko.applyBindings(self, $("#info-window")[0]);
+                    isInfoWindowLoaded = true;
+                }
+            });
+        };
+
+
+        
   self.showResourcePanel= function(title) {
     viewModel.rscLocationName(title);
     $("#wiki-error").attr("class","hidden");
@@ -399,7 +431,7 @@ var viewMapConstructor = function() {
 var viewMap = new viewMapConstructor();
 var viewModel = new ViewModelConstructor();
 
-viewModel.init();
+// viewModel.init();
 ko.applyBindings(viewModel);
 
 
@@ -413,7 +445,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   $.ajax({
     url: "https://maps.googleapis.com/maps/api/js?libraries=places&key=" +
-            maps_api_key + "&callback=viewMap.renderMap&language=" + lang,
+            // maps_api_key + "&callback=viewMap.renderMap&language=" + lang,
+            maps_api_key + "&callback=viewModel.init&language=" + lang,
     dataType: "script",
     async: true,
     success: function() {
