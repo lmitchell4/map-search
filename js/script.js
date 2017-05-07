@@ -170,8 +170,8 @@ var viewMapConstructor = function() {
       // Open an infowindow when the marker is clicked.
       // marker.addListener("click", function() {self.clickMarker(this)});
       google.maps.event.addListener(marker, 'click', function() {self.clickMarker(this)});
-            
-            
+
+
       // Change marker color when mousing over it.
       marker.addListener("mouseover", function() {self.highlightMarker(this)});
       marker.addListener("mouseout", function() {self.unhighlightMarker(this)});
@@ -187,22 +187,13 @@ var viewMapConstructor = function() {
   };
 
   self.clickMarker = function(marker) {
-    // // var largeInfowindow = new google.maps.InfoWindow();
-
     marker.setAnimation(google.maps.Animation.BOUNCE);
     clearTimeout(self.timer);
     self.timer = setTimeout(function() {
       marker.setAnimation(null);
     }, 700);
-    // // self.populateInfoWindow(marker, largeInfowindow);
-    self.populateInfoWindow(marker);
-    
-    // // Open the window before changing the content (i.e. before changing 
-    // // clickedMarker, otherwise there is a problem with the binding.
-    // self.infoWindow.open(self.map, marker);
-    // viewModel.clickedMarker(marker);
+    self.populateInfoWindow(marker);    
   };
-
 
   self.highlightMarker = function(marker) {
     // Change the marker color from the default:
@@ -217,7 +208,6 @@ var viewMapConstructor = function() {
     marker.setIcon(defaultIcon);
   };
 
-
   // Populate the infowindow when the marker is clicked.
   // This function has been modified from the Udacity real estate sample project.
   self.populateInfoWindow = function(marker) {
@@ -230,14 +220,6 @@ var viewMapConstructor = function() {
         var heading = google.maps.geometry.spherical.computeHeading(
           nearStreetViewLocation, marker.position);
 
-        // // // Set up info window content.
-        // // // Additional info gets added in API callbacks.
-        // // var pano_id = "pano-" + marker.id;
-        // // var content = "<h4>" + marker.title + "</h4>";
-        // // content += "<div class='pano' id='" + pano_id + "'></div><br>";
-        // // content += "<div class='rsc-btn' id='" + marker.id + "'>Show additional resources</div>";
-        // // self.infoWindow.setContent(content);
-
         // Set up panorma picture:
         var panoramaOptions = {
           position: nearStreetViewLocation,
@@ -248,14 +230,8 @@ var viewMapConstructor = function() {
         };
         var panorama = new google.maps.StreetViewPanorama(
           document.getElementById('pano_id'), panoramaOptions);
-
-        // $("#" + marker.id).click(function() {
-          // self.showResourcePanel(marker.title)
-        // });
       } else {
-        // Else no 
-        // self.infoWindow.setContent("<div>" + marker.title + "</div>" +
-          // "<div>No Street View Found</div>");
+        // No street view.
       }
     }
 
@@ -268,7 +244,6 @@ var viewMapConstructor = function() {
     // clickedMarker, otherwise there is a problem with the binding.
     self.infoWindow.open(self.map, marker);
     viewModel.clickedMarker(marker);
-    
   };
 
   self.showResourcePanel= function() {
