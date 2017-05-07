@@ -108,6 +108,8 @@ var viewMapConstructor = function() {
     self.slider = $("#flickr-list");   // slider = ul element
     self.sliderWorking = false;
     
+    self.mapBounds = {lat: 41.8781, lng: -87.6298};
+    
     self.infoWindowLoaded = false;
     self.infoWindow = new google.maps.InfoWindow();    
   };
@@ -135,11 +137,16 @@ var viewMapConstructor = function() {
   self.renderMap = function() {  
     // Create the map:
     self.map = new google.maps.Map(document.getElementById("map"), {
-      center: {lat: 41.8781, lng: -87.6298},
+      // center: {lat: 41.8781, lng: -87.6298},
+      center: self.mapBounds,
       zoom: 13,
       mapTypeControl: false
     });
-
+    
+    google.maps.event.addDomListener(self.map, 'resize', function() {
+      map.fitBounds(self.mapBounds); // `bounds` is a `LatLngBounds` object
+    });
+    
     var locations = viewModel.getLocations();
 
     // Set styles for the markers:
