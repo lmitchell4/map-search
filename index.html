@@ -30,7 +30,7 @@
                 <li><a data-bind="text: $data.title, click: $parent.clickListItem, event: { mouseover: $parent.mouseOverListItem, mouseout: $parent.mouseOutListItem }"></a></li>
               </ul>
               <div id="toggle-div">
-                <input data-bind="value: toggleListingsBtnText" id="toggle-listings" type="button" value="Hide Locations">
+                <input data-bind="value: toggleListingsBtnText, click: toggleListings" id="toggle-listings" type="button" value="Hide Locations">
               </div>
             </div>
             <hr>

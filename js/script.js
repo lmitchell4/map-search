@@ -27,8 +27,11 @@ var ViewModelConstructor = function() {
   self.wikiLinks = ko.observableArray([]);    // Wiki links
   self.flickrPhotos = ko.observableArray([]); // flickr photos
 
-  self.toggleListingsBtnText = ko.observable();
+  // For text bindings:
   self.rscLocationName = ko.observable();
+
+  // For value bindings:
+  self.toggleListingsBtnText = ko.observable();
 
   self.getLocations = function() {
     return model.locations;
@@ -78,7 +81,9 @@ var ViewModelConstructor = function() {
   // Close resource panel using Knockout click binding:
   self.closeResourcePanel = viewMap.closeResourcePanel;
   
-  
+  // Toggle showing or hiding markers:
+  self.toggleListings = viewMap.toggleListings;
+
   self.init = function() {
     viewMap.init();
   };
@@ -148,9 +153,7 @@ var viewMapConstructor = function() {
       } );
     }
 
-    document.getElementById("toggle-listings").addEventListener("click",
-      self.toggleListings);
-    self.toggleListings();
+    viewModel.toggleListings();
   };
 
   self.clickMarker = function(marker) {
