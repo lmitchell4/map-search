@@ -20,7 +20,7 @@ This project started with base code from the [Udacity GitHub account](https://gi
 3. Alternatively, download the repo directly from GitHub.
 
 
-#### Getting API Keys
+### Getting API Keys
 Running the site properly requires obtaining a Google Maps API key and a 
 flickr API key and adding them to the file `api_keys.js`. When you first 
 fork, clone, or download the repo this file contains a string of X's 
@@ -29,11 +29,11 @@ where each key will go.
 You can get a Google Maps API key by following the 
 instructions 
 [here](https://developers.google.com/maps/documentation/javascript/get-api-key).
-Note that this will require logging in to a gmail account, which you can set 
-up [here](https://accounts.google.com/SignUp) if you don't already have one.
-
-When generating your key you'll need to indicate which API libraries you 
-want to use. This project currently only requires the *places* library. 
+Note that this will require logging in to the Google Developer Console with a 
+gmail account, which you can set up [here](https://accounts.google.com/SignUp) 
+if you don't already have one. When generating your key you'll need to 
+indicate which API libraries you want to use. This project currently only 
+requires the **places** library. 
 In `api_keys.js`, replace all the X's in the `maps_api_key` variable with 
 your key, leaving the double quotes so that your key is defined as a string.
 
