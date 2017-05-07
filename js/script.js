@@ -27,12 +27,16 @@ var ViewModelConstructor = function() {
   self.wikiLinks = ko.observableArray([]);    // Wiki links
   self.flickrPhotos = ko.observableArray([]); // flickr photos
 
+  // Clicked marker:
+  self.clickedMarker = ko.observable();
+  
   // For text bindings:
   self.rscLocationName = ko.observable();
 
   // For value bindings:
   self.toggleListingsBtnText = ko.observable();
-
+  
+  
   self.getLocations = function() {
     return model.locations;
   };
@@ -83,7 +87,10 @@ var ViewModelConstructor = function() {
   
   // Toggle showing or hiding markers:
   self.toggleListings = viewMap.toggleListings;
-
+  
+  self.showResourcePanel = viewMap.showResourcePanel;
+  
+  
   self.init = function() {
     viewMap.init();
     viewMap.renderMap();
@@ -100,10 +107,30 @@ var viewMapConstructor = function() {
     self.timer;   // Timer for marker animation
     self.slider = $("#flickr-list");   // slider = ul element
     self.sliderWorking = false;
-
-    self.infoWindow = new google.maps.InfoWindow();
+    
+    self.infoWindowLoaded = false;
+    self.infoWindow = new google.maps.InfoWindow();    
   };
 
+  // Thanks to Stacy from the Udacity forum for help in setting up an infowindow template:
+  // https://discussions.udacity.com/t/knockout-binding-from-infowindow/189235/4
+  // http://jsfiddle.net/SittingFox/nr8tr5oo/
+  self.initializeInfoWindow = function() {
+    var infoWindowHTML =
+        '<div id="info-window"' +
+        'data-bind="template: { name: \'info-window-template\', data: clickedMarker }">' +
+        '</div>';
+    self.infoWindow.setContent(infoWindowHTML);
+    
+    // Bind infowindow to Knockout one time only.
+    google.maps.event.addListener(self.infoWindow, 'domready', function () {
+      if(!self.infoWindowLoaded) {
+        ko.applyBindings(viewModel, $("#info-window")[0]);
+        self.infoWindowLoaded = true;
+      }
+    });
+  };
+  
   // This function has been modified from the Udacity real estate sample project.
   self.renderMap = function() {  
     // Create the map:
@@ -144,8 +171,10 @@ var viewMapConstructor = function() {
       // Maps JavaScript API.
 
       // Open an infowindow when the marker is clicked.
-      marker.addListener("click", function() {self.clickMarker(this)});
-
+      // marker.addListener("click", function() {self.clickMarker(this)});
+      google.maps.event.addListener(marker, 'click', function() {self.clickMarker(this)});
+            
+            
       // Change marker color when mousing over it.
       marker.addListener("mouseover", function() {self.highlightMarker(this)});
       marker.addListener("mouseout", function() {self.unhighlightMarker(this)});
@@ -157,6 +186,7 @@ var viewMapConstructor = function() {
     }
 
     viewModel.toggleListings();
+    self.initializeInfoWindow();
   };
 
   self.clickMarker = function(marker) {
@@ -169,6 +199,11 @@ var viewMapConstructor = function() {
     }, 700);
     // // self.populateInfoWindow(marker, largeInfowindow);
     self.populateInfoWindow(marker);
+    
+    // // Open the window before changing the content (i.e. before changing 
+    // // clickedMarker, otherwise there is a problem with the binding.
+    // self.infoWindow.open(self.map, marker);
+    // viewModel.clickedMarker(marker);
   };
 
 
@@ -189,94 +224,59 @@ var viewMapConstructor = function() {
   // Populate the infowindow when the marker is clicked.
   // This function has been modified from the Udacity real estate sample project.
   self.populateInfoWindow = function(marker) {
+    // In case the status is OK, which means the pano was found, compute the
+    // position of the streetview image, then calculate the heading, then get a
+    // panorama from that and set the options.
+    function getStreetView(data, status) {
+      if(status == google.maps.StreetViewStatus.OK) {
+        var nearStreetViewLocation = data.location.latLng;
+        var heading = google.maps.geometry.spherical.computeHeading(
+          nearStreetViewLocation, marker.position);
 
-    // Check that the infowindow for this marker is not already open:
-    if(!marker.infoWindowOpen) {
-      // // marker.infoWindowOpen = true;     Comment out for now
+        // // // Set up info window content.
+        // // // Additional info gets added in API callbacks.
+        // // var pano_id = "pano-" + marker.id;
+        // // var content = "<h4>" + marker.title + "</h4>";
+        // // content += "<div class='pano' id='" + pano_id + "'></div><br>";
+        // // content += "<div class='rsc-btn' id='" + marker.id + "'>Show additional resources</div>";
+        // // self.infoWindow.setContent(content);
 
-      // // self.infoWindow.addListener("closeclick", function() {
-        // // // Reset this property when infowindow is closed:
+        // Set up panorma picture:
+        var panoramaOptions = {
+          position: nearStreetViewLocation,
+          pov: {
+            heading: heading,
+            pitch: 30
+          }
+        };
+        var panorama = new google.maps.StreetViewPanorama(
+          document.getElementById('pano_id'), panoramaOptions);
 
-        // // // $("#rsc-container").attr("class", "hidden");
-        // // marker.infoWindowOpen = false;
-      // // });
-
-      // In case the status is OK, which means the pano was found, compute the
-      // position of the streetview image, then calculate the heading, then get a
-      // panorama from that and set the options
-      function getStreetView(data, status) {
-        if(status == google.maps.StreetViewStatus.OK) {
-          var nearStreetViewLocation = data.location.latLng;
-          var heading = google.maps.geometry.spherical.computeHeading(
-            nearStreetViewLocation, marker.position);
-
-          // Set up info window content.
-          // Additional info gets added in API callbacks.
-          var pano_id = "pano-" + marker.id;
-          var content = "<h4>" + marker.title + "</h4>";
-          content += "<div class='pano' id='" + pano_id + "'></div><br>";
-          content += "<div class='rsc-btn' id='" + marker.id + "'>Show additional resources</div>";
-          self.infoWindow.setContent(content);
-
-          // Set up panorma picture:
-          var panoramaOptions = {
-            position: nearStreetViewLocation,
-            pov: {
-              heading: heading,
-              pitch: 30
-            }
-          };
-          var panorama = new google.maps.StreetViewPanorama(
-            document.getElementById(pano_id), panoramaOptions);
-
-          $("#" + marker.id).click(function() {
-            self.showResourcePanel(marker.title)
-          });
-        } else {
-          self.infoWindow.setContent("<div>" + marker.title + "</div>" +
-            "<div>No Street View Found</div>");
-        }
+        // $("#" + marker.id).click(function() {
+          // self.showResourcePanel(marker.title)
+        // });
+      } else {
+        // Else no 
+        // self.infoWindow.setContent("<div>" + marker.title + "</div>" +
+          // "<div>No Street View Found</div>");
       }
-
-      // Get the closest streetview image within 50 meters of the marker:
-      var streetViewService = new google.maps.StreetViewService();
-      var radius = 50;
-      streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-
-      // Open the infowindow on the correct marker:
-      self.infoWindow.open(self.map, marker);
     }
+
+    // Get the closest streetview image within 50 meters of the marker:
+    var streetViewService = new google.maps.StreetViewService();
+    var radius = 50;
+    streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+    
+    // Open the window before changing the content (i.e. before changing 
+    // clickedMarker, otherwise there is a problem with the binding.
+    self.infoWindow.open(self.map, marker);
+    viewModel.clickedMarker(marker);
+    
   };
 
-  
-  
-        // Sets up lone info window
-        self.infoWindowInitialize = function () {
-            var infoWindowHTML =
-                '<div id="info-window"' +
-                'data-bind="template: { name: \'info-window-template\', data: name }">' +
-                '</div>';
+  self.showResourcePanel= function() {
+    var title = viewModel.clickedMarker().title;
 
-            self.infoWindow = new google.maps.InfoWindow({
-                content: infoWindowHTML
-            });
-            var isInfoWindowLoaded = false;
-
-            /*
-             * When the info window opens, bind it to Knockout.
-             * Only do this once.
-             */
-            google.maps.event.addListener(self.infoWindow, 'domready', function () {
-                if (!isInfoWindowLoaded) {
-                    ko.applyBindings(self, $("#info-window")[0]);
-                    isInfoWindowLoaded = true;
-                }
-            });
-        };
-
-
-        
-  self.showResourcePanel= function(title) {
     viewModel.rscLocationName(title);
     $("#wiki-error").attr("class","hidden");
     $("#flickr-error").attr("class","hidden");

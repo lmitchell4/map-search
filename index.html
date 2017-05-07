@@ -95,13 +95,18 @@
     </div>
 
     <!-- Knockout template -->
-    <!-- <script type="text/html" id="info-window-template"> -->
-        <!-- <h3 data-bind="text: $data"></h3> -->
-    <!-- <!-- </script> --> -->
-    <!-- <div id="infoWindowContentContainer" class="hidden"> -->
+    <script type="text/html" id="info-window-template">
+        <h4 data-bind="text: $data.title"></h4>
+        <div class='pano' id='pano_id'></div><br>
+        <!-- <div id='$data.id' class='rsc-btn'>Show additional resources</div> -->
+        <div class='rsc-btn'>Show additional resources</div>
+        <!-- <div data-bind="click: showResourcePanel" class='rsc-btn'>Show additional resources</div> -->
+        <!-- <h3 data-bind="text: $data.title"></h3> -->
+    </script>
     
-    <!-- </div> -->
-    
+        <!-- // var pano_id = "pano-" + marker.id; -->
+
+        
     <script src="js/lib/jquery-3.1.1.min.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
