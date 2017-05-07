@@ -26,7 +26,10 @@ var ViewModelConstructor = function() {
   self.allLocations = ko.observableArray([]); // Array for location list
   self.wikiLinks = ko.observableArray([]);    // Wiki links
   self.flickrPhotos = ko.observableArray([]); // flickr photos
-  
+
+  self.toggleListingsBtnText = ko.observable();
+  self.rscLocationName = ko.observable();
+
   self.getLocations = function() {
     return model.locations;
   };
@@ -71,7 +74,11 @@ var ViewModelConstructor = function() {
 
   // Handle photo slider event handling with Knockout bindings.
   self.sliderArrow = viewMap.sliderArrow;
-
+  
+  // Close resource panel using Knockout click binding:
+  self.closeResourcePanel = viewMap.closeResourcePanel;
+  
+  
   self.init = function() {
     viewMap.init();
   };
@@ -88,12 +95,12 @@ var viewMapConstructor = function() {
     self.slider = $("#flickr-list");   // slider = ul element
     self.sliderWorking = false;
     
-    $("#rsc-close").click(function() {
-      $("#map").height("calc(100vh - 40px)");
-      $("#rsc-container").attr("class","hidden");
-      viewModel.flickrPhotos.removeAll();
-      viewModel.wikiLinks.removeAll();
-    })
+    // // $("#rsc-close").click(function() {
+      // // $("#map").height("calc(100vh - 40px)");
+      // // $("#rsc-container").attr("class","hidden");
+      // // viewModel.flickrPhotos.removeAll();
+      // // viewModel.wikiLinks.removeAll();
+    // // })
   };
 
   // This function has been modified from the Udacity real estate sample project.
@@ -243,7 +250,8 @@ var viewMapConstructor = function() {
   };
 
   self.showResourcePanel= function(title) {
-    $("#rsc-location-name").text(title);
+    // $("#rsc-location-name").text(title);
+    viewModel.rscLocationName(title);
     $("#wiki-error").attr("class","hidden");
     $("#flickr-error").attr("class","hidden");
     $("#map").height("calc(100vh - 40px - " + $("#rsc-container").height() + "px");
@@ -318,6 +326,14 @@ var viewMapConstructor = function() {
     });
   };
 
+  // Close the resource panel:
+  self.closeResourcePanel = function() {
+    $("#map").height("calc(100vh - 40px)");
+    $("#rsc-container").attr("class","hidden");
+    viewModel.flickrPhotos.removeAll();
+    viewModel.wikiLinks.removeAll();
+  };
+  
   // Display the locations in the list and on the map:
   self.toggleListings = function() {
     if(viewModel.markersVisible) {
@@ -325,7 +341,9 @@ var viewMapConstructor = function() {
       for(var i=0; i < viewModel.markers.length; i++) {
         viewModel.markers[i].setMap(null);
       }
-      $("#toggle-listings").val("Show Locations");
+      viewModel.toggleListingsBtnText("Show Locations");
+      
+      // // $("#toggle-listings").val("Show Locations");
       viewModel.markersVisible = false;
     } else {
       // Show the markers:
@@ -336,7 +354,9 @@ var viewMapConstructor = function() {
         bounds.extend(viewModel.markers[i].position);
       }
       self.map.fitBounds(bounds);
-      $("#toggle-listings").val("Hide Locations");
+      viewModel.toggleListingsBtnText("Hide Locations");
+      
+      // // $("#toggle-listings").val("Hide Locations");
       viewModel.markersVisible = true;
     }
   };

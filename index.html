@@ -30,7 +30,7 @@
                 <li><a data-bind="text: $data.title, click: $parent.clickListItem, event: { mouseover: $parent.mouseOverListItem, mouseout: $parent.mouseOutListItem }"></a></li>
               </ul>
               <div id="toggle-div">
-                <input id="toggle-listings" type="button" value="Hide Locations">
+                <input data-bind="value: toggleListingsBtnText" id="toggle-listings" type="button" value="Hide Locations">
               </div>
             </div>
             <hr>
@@ -48,8 +48,8 @@
             <div class="col-xs-12 padding-none no-pad">
 
               <div id="rsc-container" class="hidden">
-                <div id="rsc-close" class="glyphicon glyphicon-remove"></div>
-                <h4 id="rsc-location-name"></h4>
+                <div data-bind="click: closeResourcePanel" id="rsc-close" class="glyphicon glyphicon-remove"></div>
+                <h4 data-bind="text: rscLocationName" id="rsc-location-name"></h4>
                 <ul class="nav nav-tabs">
                   <!-- nav-stacked -->
                   <li class="active"><a href="#wiki" data-toggle="tab">Wikipedia Articles</a></li>
