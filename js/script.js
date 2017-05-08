@@ -3,15 +3,15 @@ var model = {
   // Hard code the locations of interest for now.
   // Normally they would be in a database.
   locations: [
-    {title: "Museum of Science and Industry", location: {lat: 41.7906088, lng: -87.5830586}},
-    {title: "Museum of Contemporary Art", location: {lat: 41.8972116, lng: -87.62107069999999}},
-    {title: "Shedd Aquarium", location: {lat: 41.8676217, lng: -87.6136616}},
-    {title: "Lincoln Park Zoo", location: {lat: 41.9211, lng: -87.6340}},
-    {title: "Field Museum of Natural History", location: {lat: 41.8661733, lng: -87.61698620000001}},
-    {title: "Art Institute of Chicago", location: {lat: 41.879347, lng: -87.621228}},
-    {title: "Chicago History Museum", location: {lat: 41.9119691, lng: -87.6315025}},
-    {title: "Adler Planetarium", location: {lat: 41.8663557, lng: -87.60661159999999}},
-    {title: "Soldier Field", location: {lat: 41.8622646, lng: -87.61663820000001}}
+    {title: 'Museum of Science and Industry', location: {lat: 41.7906088, lng: -87.5830586}},
+    {title: 'Museum of Contemporary Art', location: {lat: 41.8972116, lng: -87.62107069999999}},
+    {title: 'Shedd Aquarium', location: {lat: 41.8676217, lng: -87.6136616}},
+    {title: 'Lincoln Park Zoo', location: {lat: 41.9211, lng: -87.6340}},
+    {title: 'Field Museum of Natural History', location: {lat: 41.8661733, lng: -87.61698620000001}},
+    {title: 'Art Institute of Chicago', location: {lat: 41.879347, lng: -87.621228}},
+    {title: 'Chicago History Museum', location: {lat: 41.9119691, lng: -87.6315025}},
+    {title: 'Adler Planetarium', location: {lat: 41.8663557, lng: -87.60661159999999}},
+    {title: 'Soldier Field', location: {lat: 41.8622646, lng: -87.61663820000001}}
   ]
 }
 
@@ -59,7 +59,7 @@ var ViewModelConstructor = function() {
   };
 
   // Implement filter functionality:
-  self.filterCriteria = ko.observable("");
+  self.filterCriteria = ko.observable('');
   self.filteredLocations = ko.computed(function() {
     var filter = self.filterCriteria();
 
@@ -71,7 +71,7 @@ var ViewModelConstructor = function() {
     } else {
       return ko.utils.arrayFilter(self.allLocations(), function(loc) {
         // toLowerCase().indexOf(value.toLowerCase()) >= 0) would be simpler
-        var re = new RegExp(filter, "i");
+        var re = new RegExp(filter, 'i');
         var match = re.test(loc.title);
         self.markers[loc.marker_id].setVisible(match);
         return match;
@@ -92,9 +92,9 @@ var ViewModelConstructor = function() {
   self.showResourcePanel = viewMap.showResourcePanel;
   
   // Set class properties:
-  self.wikiErrorStatus = ko.observable("hidden");
-  self.flickrErrorStatus = ko.observable("hidden");
-  self.rscContainerStatus = ko.observable("hidden");
+  self.wikiErrorStatus = ko.observable('hidden');
+  self.flickrErrorStatus = ko.observable('hidden');
+  self.rscContainerStatus = ko.observable('hidden');
 
   self.init = function() {
     viewMap.init();
@@ -110,7 +110,7 @@ var viewMapConstructor = function() {
   self.init = function() {
     self.map;
     self.timer;   // Timer for marker animation
-    self.slider = $("#flickr-list");   // slider = ul element
+    self.slider = $('#flickr-list');   // slider = ul element
     self.sliderWorking = false;
     
     self.mapBounds = {lat: 41.8781, lng: -87.6298};
@@ -132,7 +132,7 @@ var viewMapConstructor = function() {
     // Bind infowindow to Knockout one time only.
     google.maps.event.addListener(self.infoWindow, 'domready', function () {
       if(!self.infoWindowLoaded) {
-        ko.applyBindings(viewModel, $("#info-window")[0]);
+        ko.applyBindings(viewModel, $('#info-window')[0]);
         self.infoWindowLoaded = true;
       }
     });
@@ -141,7 +141,7 @@ var viewMapConstructor = function() {
   // This function has been modified from the Udacity real estate sample project.
   self.renderMap = function() {  
     // Create the map:
-    self.map = new google.maps.Map(document.getElementById("map"), {
+    self.map = new google.maps.Map(document.getElementById('map'), {
       // center: {lat: 41.8781, lng: -87.6298},
       center: self.mapBounds,
       zoom: 13,
@@ -155,7 +155,7 @@ var viewMapConstructor = function() {
     var locations = viewModel.getLocations();
 
     // Set styles for the markers:
-    var defaultIcon = self.makeMarkerIcon("0091ff");
+    var defaultIcon = self.makeMarkerIcon('0091ff');
 
     // Create the markers:
     for(var i = 0; i < locations.length; i++) {
@@ -180,13 +180,13 @@ var viewMapConstructor = function() {
       // Maps JavaScript API.
 
       // Open an infowindow when the marker is clicked.
-      // marker.addListener("click", function() {self.clickMarker(this)});
+      // marker.addListener('click', function() {self.clickMarker(this)});
       google.maps.event.addListener(marker, 'click', function() {self.clickMarker(this)});
 
 
       // Change marker color when mousing over it.
-      marker.addListener("mouseover", function() {self.highlightMarker(this)});
-      marker.addListener("mouseout", function() {self.unhighlightMarker(this)});
+      marker.addListener('mouseover', function() {self.highlightMarker(this)});
+      marker.addListener('mouseout', function() {self.unhighlightMarker(this)});
 
       viewModel.allLocations.push( {
         title: marker.title,
@@ -209,14 +209,14 @@ var viewMapConstructor = function() {
 
   self.highlightMarker = function(marker) {
     // Change the marker color from the default:
-    var highlightedIcon = self.makeMarkerIcon("9400D3");
+    var highlightedIcon = self.makeMarkerIcon('9400D3');
     marker.setIcon(highlightedIcon);
   };
 
 
   self.unhighlightMarker = function(marker) {
     // Return to normal marker color:
-    var defaultIcon = self.makeMarkerIcon("0091ff");
+    var defaultIcon = self.makeMarkerIcon('0091ff');
     marker.setIcon(defaultIcon);
   };
 
@@ -262,13 +262,13 @@ var viewMapConstructor = function() {
     var title = viewModel.clickedMarker().title;
 
     viewModel.rscLocationName(title);
-    viewModel.wikiErrorStatus("hidden");
-    viewModel.flickrErrorStatus("hidden");
-    $("#map").height("calc(100vh - 40px - " + $("#rsc-container").height() + "px");
-    viewModel.rscContainerStatus("");
+    viewModel.wikiErrorStatus('hidden');
+    viewModel.flickrErrorStatus('hidden');
+    $('#map').height('calc(100vh - 40px - ' + $('#rsc-container').height() + 'px');
+    viewModel.rscContainerStatus('');
     
     // Reset the location of the photo slider each time this function runs:
-    self.slider.css("left",0);
+    self.slider.css('left',0);
 
     // Clear the observableArrays each time this function is run.
     viewModel.flickrPhotos.removeAll();
@@ -276,14 +276,14 @@ var viewMapConstructor = function() {
 
     // Load Wikipedia resources:
     $.ajax({
-      url: "http://en.wikipedia.org/w/api.php",
+      url: 'http://en.wikipedia.org/w/api.php',
       data: {
-        action: "query",
-        list: "search",
+        action: 'query',
+        list: 'search',
         srsearch: title,
-        format: "json"
+        format: 'json'
       },
-      dataType: "jsonp",
+      dataType: 'jsonp',
       timeout: 2000,
       success: function(data) {
         var articles = data.query.search;
@@ -291,31 +291,31 @@ var viewMapConstructor = function() {
         for(var i = 0; i < Math.min(5,articles.length); i++) {
           viewModel.wikiLinks.push({
             title: articles[i].title,
-            url: "http://en.wikipedia.org/wiki/" + articles[i].title
+            url: 'http://en.wikipedia.org/wiki/' + articles[i].title
           });
         }
       }
     }).fail(function() {
-      viewModel.wikiErrorStatus("");
-      console.log("Unable to load Wikipedia resources.");
+      viewModel.wikiErrorStatus('');
+      console.log('Unable to load Wikipedia resources.');
     });
 
 
     // Load flickr resources:
-    var flickr_url = "https://api.flickr.com/services/rest/?";
+    var flickr_url = 'https://api.flickr.com/services/rest/?';
     $.ajax({
       url: flickr_url,
       data: {
-        method: "flickr.photos.search",
+        method: 'flickr.photos.search',
         api_key: flickr_api_key,
         tags: title,
         privacy_filter: 1,
         safe_search: 1,
-        format: "json",
-        nojsoncallback: "1",
-        extras: "owner_name"
+        format: 'json',
+        nojsoncallback: '1',
+        extras: 'owner_name'
       },
-      dataType: "json",
+      dataType: 'json',
       timeout: 2000,
       success: function(data) {
         var photos = data.photos.photo;
@@ -324,22 +324,22 @@ var viewMapConstructor = function() {
         for(var i = 0; i < Math.min(10,photos.length); i++) {
           photo = photos[i];
           viewModel.flickrPhotos.push( {
-            src: "https://farm" + photo.farm + ".staticflickr.com/" +
-                  photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg",
-            url: "http://flickr.com/photos/" + photo.owner + "/" + photo.id
+            src: 'https://farm' + photo.farm + '.staticflickr.com/' +
+                  photo.server + '/' + photo.id + '_' + photo.secret + '_t.jpg',
+            url: 'http://flickr.com/photos/' + photo.owner + '/' + photo.id
           } );
         }
       }
     }).fail(function() {
-      viewModel.flickrErrorStatus("");      
-      console.log("Unable to load flickr resources.");
+      viewModel.flickrErrorStatus('');      
+      console.log('Unable to load flickr resources.');
     });
   };
 
   // Close the resource panel:
   self.closeResourcePanel = function() {
-    $("#map").height("calc(100vh - 40px)");
-    viewModel.rscContainerStatus("hidden");
+    $('#map').height('calc(100vh - 40px)');
+    viewModel.rscContainerStatus('hidden');
     viewModel.flickrPhotos.removeAll();
     viewModel.wikiLinks.removeAll();
   };
@@ -351,7 +351,7 @@ var viewMapConstructor = function() {
       for(var i=0; i < viewModel.markers.length; i++) {
         viewModel.markers[i].setMap(null);
       }
-      viewModel.toggleListingsBtnText("Show Locations");
+      viewModel.toggleListingsBtnText('Show Locations');
       viewModel.markersVisible = false;
     } else {
       // Show the markers:
@@ -362,7 +362,7 @@ var viewMapConstructor = function() {
         bounds.extend(viewModel.markers[i].position);
       }
       self.map.fitBounds(bounds);
-      viewModel.toggleListingsBtnText("Hide Locations");
+      viewModel.toggleListingsBtnText('Hide Locations');
       viewModel.markersVisible = true;
     }
   };
@@ -373,8 +373,8 @@ var viewMapConstructor = function() {
   // This function has been modified from the Udacity real estate sample project.
   self.makeMarkerIcon = function(markerColor) {
     var markerImage = new google.maps.MarkerImage(
-      "http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|"+ markerColor +
-      "|40|_|%E2%80%A2",
+      'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+      '|40|_|%E2%80%A2',
       new google.maps.Size(21, 34),
       new google.maps.Point(0, 0),
       new google.maps.Point(10, 34),
@@ -387,14 +387,14 @@ var viewMapConstructor = function() {
     if(!self.sliderWorking) {
       self.sliderWorking = true;
 
-      var leftProperty = parseInt(self.slider.css("left"));
+      var leftProperty = parseInt(self.slider.css('left'));
       var newLeftProperty = leftProperty;
       
       // Figure out the new left property:
-      if(whichButton == "left" && leftProperty < 0) {
+      if(whichButton == 'left' && leftProperty < 0) {
         // Left arrow clicked.
         newLeftProperty = leftProperty + 155;
-      } else if(whichButton == "right" && leftProperty > 155*(1 - viewModel.flickrPhotos().length)) {
+      } else if(whichButton == 'right' && leftProperty > 155*(1 - viewModel.flickrPhotos().length)) {
         // Right arrow clicked.
         newLeftProperty = leftProperty - 155;
       }
@@ -419,25 +419,25 @@ var viewModel = new ViewModelConstructor();
 ko.applyBindings(viewModel);
 
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function () {
   var lang;
-  if(document.querySelector("html").lang) {
-    lang = document.querySelector("html").lang;
+  if(document.querySelector('html').lang) {
+    lang = document.querySelector('html').lang;
   } else {
-    lang = "en";
+    lang = 'en';
   }
 
   $.ajax({
-    url: "https://maps.googleapis.com/maps/api/js?libraries=places&key=" +
-            // maps_api_key + "&callback=viewMap.renderMap&language=" + lang,
-            maps_api_key + "&callback=viewModel.init&language=" + lang,
-    dataType: "script",
+    url: 'https://maps.googleapis.com/maps/api/js?libraries=places&key=' +
+            // maps_api_key + '&callback=viewMap.renderMap&language=' + lang,
+            maps_api_key + '&callback=viewModel.init&language=' + lang,
+    dataType: 'script',
     async: true,
     success: function() {
     }
   }).fail(function() {
-    $("#map").append("<h3 class='error'>Unfortunately, we were unable to load Google Maps.</h3>" +
-                     "<h3 class='error'>Please try again later.</h3>");
+    $('#map').append('<h3 class="error">Unfortunately, we were unable to load Google Maps.</h3>' +
+                     '<h3 class="error">Please try again later.</h3>');
   });;
 });
 
