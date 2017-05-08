@@ -88,9 +88,14 @@ var ViewModelConstructor = function() {
   // Toggle showing or hiding markers:
   self.toggleListings = viewMap.toggleListings;
   
+  // Click binding function for showing the resource panel:
   self.showResourcePanel = viewMap.showResourcePanel;
   
-  
+  // Set class properties:
+  self.wikiErrorStatus = ko.observable("hidden");
+  self.flickrErrorStatus = ko.observable("hidden");
+  self.rscContainerStatus = ko.observable("hidden");
+
   self.init = function() {
     viewMap.init();
     viewMap.renderMap();
@@ -111,7 +116,7 @@ var viewMapConstructor = function() {
     self.mapBounds = {lat: 41.8781, lng: -87.6298};
     
     self.infoWindowLoaded = false;
-    self.infoWindow = new google.maps.InfoWindow();    
+    self.infoWindow = new google.maps.InfoWindow();
   };
 
   // Thanks to Stacy from the Udacity forum for help in setting up an infowindow template:
@@ -257,11 +262,11 @@ var viewMapConstructor = function() {
     var title = viewModel.clickedMarker().title;
 
     viewModel.rscLocationName(title);
-    $("#wiki-error").attr("class","hidden");
-    $("#flickr-error").attr("class","hidden");
+    viewModel.wikiErrorStatus("hidden");
+    viewModel.flickrErrorStatus("hidden");
     $("#map").height("calc(100vh - 40px - " + $("#rsc-container").height() + "px");
-    $("#rsc-container").removeClass("hidden");
-
+    viewModel.rscContainerStatus("");
+    
     // Reset the location of the photo slider each time this function runs:
     self.slider.css("left",0);
 
@@ -291,7 +296,7 @@ var viewMapConstructor = function() {
         }
       }
     }).fail(function() {
-      $("#wiki-error").removeClass("hidden");
+      viewModel.wikiErrorStatus("");
       console.log("Unable to load Wikipedia resources.");
     });
 
@@ -326,7 +331,7 @@ var viewMapConstructor = function() {
         }
       }
     }).fail(function() {
-      $("#flickr-error").removeClass("hidden");
+      viewModel.flickrErrorStatus("");      
       console.log("Unable to load flickr resources.");
     });
   };
@@ -334,7 +339,7 @@ var viewMapConstructor = function() {
   // Close the resource panel:
   self.closeResourcePanel = function() {
     $("#map").height("calc(100vh - 40px)");
-    $("#rsc-container").attr("class","hidden");
+    viewModel.rscContainerStatus("hidden");
     viewModel.flickrPhotos.removeAll();
     viewModel.wikiLinks.removeAll();
   };
