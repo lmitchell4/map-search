@@ -263,7 +263,7 @@ var viewMapConstructor = function() {
     $("#rsc-container").removeClass("hidden");
 
     // Reset the location of the photo slider each time this function runs:
-    $("#flickr-list").css("left",0);
+    self.slider.css("left",0);
 
     // Clear the observableArrays each time this function is run.
     viewModel.flickrPhotos.removeAll();
