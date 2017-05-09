@@ -18,7 +18,7 @@
       <div class="row">
 
         <div class="col-sm-4 padding-none no-pad">
-          <section class="listing">
+          <section class="places-list">
             <div class="options-box">
               <h1>Plan your trip to Chicago</h1>
               <div>
@@ -40,10 +40,10 @@
         </div>
 
         <div class="col-sm-8 padding-none">
-          <section class="map">
+          <section class="places-map">
             <div class="row">
               <div class="col-xs-12 padding-none no-pad">
-                <div id="map">
+                <div data-bind="css: mapStatus" id="map">
                   <h3 data-bind="css: mapErrorStatus" class="error">Unfortunately, we were unable to load Google Maps.</h3>
                   <h3 data-bind="css: mapErrorStatus" class="error">Please try again later.</h3>
                 </div>

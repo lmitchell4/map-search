@@ -36,7 +36,6 @@ var ViewModelConstructor = function() {
   // For value bindings:
   self.toggleListingsBtnText = ko.observable();
 
-
   self.getLocations = function() {
     return model.locations;
   };
@@ -96,6 +95,7 @@ var ViewModelConstructor = function() {
   self.flickrErrorStatus = ko.observable('hidden');
   self.rscContainerStatus = ko.observable('hidden');
   self.mapErrorStatus = ko.observable('hidden');
+  self.mapStatus = ko.observable('');
 
   self.init = function() {
     viewMap.init();
@@ -275,7 +275,8 @@ var viewMapConstructor = function() {
     viewModel.rscLocationName(title);
     viewModel.wikiErrorStatus('hidden');
     viewModel.flickrErrorStatus('hidden');
-    $('#map').height('calc(100vh - 40px - ' + $('#rsc-container').height() + 'px');
+    // // $('#map').height('calc(100vh - 40px - ' + $('#rsc-container').height() + 'px');
+    viewModel.mapStatus('reduced');
     viewModel.rscContainerStatus('');
 
     // Reset the location of the photo slider each time this function runs:
@@ -349,7 +350,8 @@ var viewMapConstructor = function() {
 
   // Close the resource panel:
   self.closeResourcePanel = function() {
-    $('#map').height('calc(100vh - 40px)');
+    // // $('#map').height('calc(100vh - 40px)');
+    viewModel.mapStatus('');
     viewModel.rscContainerStatus('hidden');
     viewModel.flickrPhotos.removeAll();
     viewModel.wikiLinks.removeAll();
