@@ -200,6 +200,11 @@ var viewMapConstructor = function() {
   };
 
   self.clickMarker = function(marker) {
+    // Fix bug where animations do not stop:
+    for(var j = 0; j < viewModel.markers.length; j++) {
+      viewModel.markers[j].setAnimation(null);
+    }
+    
     marker.setAnimation(google.maps.Animation.BOUNCE);
     clearTimeout(self.timer);
     self.timer = setTimeout(function() {
