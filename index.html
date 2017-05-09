@@ -40,7 +40,10 @@
         <div class="col-sm-8 padding-none">
           <div class="row">
             <div class="col-xs-12 padding-none no-pad">
-              <div id="map"></div>
+              <div id="map">
+                <h3 data-bind="css: mapErrorStatus" class="error">Unfortunately, we were unable to load Google Maps.</h3>
+                <h3 data-bind="css: mapErrorStatus" class="error">Please try again later.</h3>
+              </div>
             </div>
           </div>
 
@@ -106,6 +109,5 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="js/my_api_keys.js" defer></script>
     <script src="js/script.js" defer></script>
-
   </body>
 </html>

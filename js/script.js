@@ -95,6 +95,7 @@ var ViewModelConstructor = function() {
   self.wikiErrorStatus = ko.observable('hidden');
   self.flickrErrorStatus = ko.observable('hidden');
   self.rscContainerStatus = ko.observable('hidden');
+  self.mapErrorStatus = ko.observable('hidden');
 
   self.init = function() {
     viewMap.init();
@@ -412,32 +413,25 @@ var viewMapConstructor = function() {
 };
 
 
+mapError = function() {
+  // Handle google maps API error:
+  viewModel.mapErrorStatus("error");
+};
+
+
 var viewMap = new viewMapConstructor();
 var viewModel = new ViewModelConstructor();
-
-// viewModel.init();
 ko.applyBindings(viewModel);
 
 
-document.addEventListener('DOMContentLoaded', function () {
-  var lang;
-  if(document.querySelector('html').lang) {
-    lang = document.querySelector('html').lang;
-  } else {
-    lang = 'en';
-  }
-
-  $.ajax({
-    url: 'https://maps.googleapis.com/maps/api/js?libraries=places&key=' +
-            // maps_api_key + '&callback=viewMap.renderMap&language=' + lang,
-            maps_api_key + '&callback=viewModel.init&language=' + lang,
-    dataType: 'script',
-    async: true,
-    success: function() {
-    }
-  }).fail(function() {
-    $('#map').append('<h3 class="error">Unfortunately, we were unable to load Google Maps.</h3>' +
-                     '<h3 class="error">Please try again later.</h3>');
-  });;
+// Create and load script element to call Google Maps API:
+$(document).ready(function() {
+  var mapsScriptElem = document.createElement('script');
+  mapsScriptElem.type = 'text/javascript';
+  mapsScriptElem.onerror = mapError;
+  mapsScriptElem.src = 'https://ma22ps.googleapis.com/maps/api/js?libraries=places&key=' +
+                        maps_api_key + '&callback=viewModel.init';
+  mapsScriptElem.async;
+  mapsScriptElem.defer;
+  document.getElementsByTagName('head')[0].appendChild(mapsScriptElem);
 });
-
