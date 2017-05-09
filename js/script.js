@@ -13,7 +13,7 @@ var model = {
     {title: 'Adler Planetarium', location: {lat: 41.8663557, lng: -87.60661159999999}},
     {title: 'Soldier Field', location: {lat: 41.8622646, lng: -87.61663820000001}}
   ]
-}
+};
 
 
 var ViewModelConstructor = function() {
@@ -29,14 +29,14 @@ var ViewModelConstructor = function() {
 
   // Clicked marker:
   self.clickedMarker = ko.observable();
-  
+
   // For text bindings:
   self.rscLocationName = ko.observable();
 
   // For value bindings:
   self.toggleListingsBtnText = ko.observable();
-  
-  
+
+
   self.getLocations = function() {
     return model.locations;
   };
@@ -81,16 +81,16 @@ var ViewModelConstructor = function() {
 
   // Handle photo slider event handling with Knockout bindings.
   self.sliderArrow = viewMap.sliderArrow;
-  
+
   // Close resource panel using Knockout click binding:
   self.closeResourcePanel = viewMap.closeResourcePanel;
-  
+
   // Toggle showing or hiding markers:
   self.toggleListings = viewMap.toggleListings;
-  
+
   // Click binding function for showing the resource panel:
   self.showResourcePanel = viewMap.showResourcePanel;
-  
+
   // Set class properties:
   self.wikiErrorStatus = ko.observable('hidden');
   self.flickrErrorStatus = ko.observable('hidden');
@@ -101,7 +101,7 @@ var ViewModelConstructor = function() {
     viewMap.init();
     viewMap.renderMap();
   };
-}
+};
 
 
 
@@ -113,9 +113,9 @@ var viewMapConstructor = function() {
     self.timer;   // Timer for marker animation
     self.slider = $('#flickr-list');   // slider = ul element
     self.sliderWorking = false;
-    
+
     self.mapBounds = {lat: 41.8781, lng: -87.6298};
-    
+
     self.infoWindowLoaded = false;
     self.infoWindow = new google.maps.InfoWindow();
   };
@@ -129,7 +129,7 @@ var viewMapConstructor = function() {
         'data-bind="template: { name: \'info-window-template\', data: clickedMarker }">' +
         '</div>';
     self.infoWindow.setContent(infoWindowHTML);
-    
+
     // Bind infowindow to Knockout one time only.
     google.maps.event.addListener(self.infoWindow, 'domready', function () {
       if(!self.infoWindowLoaded) {
@@ -138,9 +138,9 @@ var viewMapConstructor = function() {
       }
     });
   };
-  
+
   // This function has been modified from the Udacity real estate sample project.
-  self.renderMap = function() {  
+  self.renderMap = function() {
     // Create the map:
     self.map = new google.maps.Map(document.getElementById('map'), {
       // center: {lat: 41.8781, lng: -87.6298},
@@ -148,11 +148,11 @@ var viewMapConstructor = function() {
       zoom: 13,
       mapTypeControl: false
     });
-    
+
     google.maps.event.addDomListener(self.map, 'resize', function() {
       map.fitBounds(self.mapBounds); // `bounds` is a `LatLngBounds` object
     });
-    
+
     var locations = viewModel.getLocations();
 
     // Set styles for the markers:
@@ -182,12 +182,17 @@ var viewMapConstructor = function() {
 
       // Open an infowindow when the marker is clicked.
       // marker.addListener('click', function() {self.clickMarker(this)});
-      google.maps.event.addListener(marker, 'click', function() {self.clickMarker(this)});
-
+      google.maps.event.addListener(marker, 'click', function() {
+        self.clickMarker(this);
+      });
 
       // Change marker color when mousing over it.
-      marker.addListener('mouseover', function() {self.highlightMarker(this)});
-      marker.addListener('mouseout', function() {self.unhighlightMarker(this)});
+      marker.addListener('mouseover', function() {
+        self.highlightMarker(this);
+      });
+      marker.addListener('mouseout', function() {
+        self.unhighlightMarker(this);
+      });
 
       viewModel.allLocations.push( {
         title: marker.title,
@@ -204,13 +209,13 @@ var viewMapConstructor = function() {
     for(var j = 0; j < viewModel.markers.length; j++) {
       viewModel.markers[j].setAnimation(null);
     }
-    
+
     marker.setAnimation(google.maps.Animation.BOUNCE);
     clearTimeout(self.timer);
     self.timer = setTimeout(function() {
       marker.setAnimation(null);
     }, 700);
-    self.populateInfoWindow(marker);    
+    self.populateInfoWindow(marker);
   };
 
   self.highlightMarker = function(marker) {
@@ -257,8 +262,8 @@ var viewMapConstructor = function() {
     var streetViewService = new google.maps.StreetViewService();
     var radius = 50;
     streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-    
-    // Open the window before changing the content (i.e. before changing 
+
+    // Open the window before changing the content (i.e. before changing
     // clickedMarker, otherwise there is a problem with the binding.
     self.infoWindow.open(self.map, marker);
     viewModel.clickedMarker(marker);
@@ -272,7 +277,7 @@ var viewMapConstructor = function() {
     viewModel.flickrErrorStatus('hidden');
     $('#map').height('calc(100vh - 40px - ' + $('#rsc-container').height() + 'px');
     viewModel.rscContainerStatus('');
-    
+
     // Reset the location of the photo slider each time this function runs:
     self.slider.css('left',0);
 
@@ -337,7 +342,7 @@ var viewMapConstructor = function() {
         }
       }
     }).fail(function() {
-      viewModel.flickrErrorStatus('');      
+      viewModel.flickrErrorStatus('');
       console.log('Unable to load flickr resources.');
     });
   };
@@ -349,7 +354,7 @@ var viewMapConstructor = function() {
     viewModel.flickrPhotos.removeAll();
     viewModel.wikiLinks.removeAll();
   };
-  
+
   // Display the locations in the list and on the map:
   self.toggleListings = function() {
     if(viewModel.markersVisible) {
@@ -363,9 +368,9 @@ var viewMapConstructor = function() {
       // Show the markers:
       var bounds = new google.maps.LatLngBounds();
       // Extend the boundaries of the map for each marker and display the marker
-      for(var i=0; i < viewModel.markers.length; i++) {
-        viewModel.markers[i].setMap(self.map);
-        bounds.extend(viewModel.markers[i].position);
+      for(var j=0; j < viewModel.markers.length; j++) {
+        viewModel.markers[j].setMap(self.map);
+        bounds.extend(viewModel.markers[j].position);
       }
       self.map.fitBounds(bounds);
       viewModel.toggleListingsBtnText('Hide Locations');
@@ -395,7 +400,7 @@ var viewMapConstructor = function() {
 
       var leftProperty = parseInt(self.slider.css('left'));
       var newLeftProperty = leftProperty;
-      
+
       // Figure out the new left property:
       if(whichButton == 'left' && leftProperty < 0) {
         // Left arrow clicked.
@@ -404,7 +409,7 @@ var viewMapConstructor = function() {
         // Right arrow clicked.
         newLeftProperty = leftProperty - 155;
       }
-      
+
       if(newLeftProperty != leftProperty) {
         // Animate the movement of the panel:
         self.slider.animate( {left: newLeftProperty}, 800, function() {
@@ -432,11 +437,10 @@ ko.applyBindings(viewModel);
 // Create and load script element to call Google Maps API:
 $(document).ready(function() {
   var mapsScriptElem = document.createElement('script');
-  mapsScriptElem.type = 'text/javascript';
   mapsScriptElem.onerror = mapError;
+  mapsScriptElem.async = true;
+  mapsScriptElem.defer = true;
   mapsScriptElem.src = 'https://maps.googleapis.com/maps/api/js?libraries=places&key=' +
                         maps_api_key + '&callback=viewModel.init';
-  mapsScriptElem.async;
-  mapsScriptElem.defer;
   document.getElementsByTagName('head')[0].appendChild(mapsScriptElem);
 });
