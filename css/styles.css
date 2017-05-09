@@ -44,7 +44,6 @@ hr {
 
 #listings-list a:hover {
   cursor: pointer;
-  cursor: hand;
   color: #9400D3;
   text-decoration: none;
 }
@@ -85,7 +84,6 @@ hr {
 
 .rsc-btn:hover {
   cursor: pointer;
-  cursor: hand;
   text-decoration: none;
   color: #fff;
   background: #9400D3;
@@ -102,7 +100,6 @@ hr {
 #rsc-close {
   position: absolute;
   cursor: pointer;
-  cursor: hand;
   z-index: 2;
   right: 0;
   font-size: 18px;
@@ -126,7 +123,6 @@ hr {
 
 .img-button:hover {
   cursor: pointer;
-  cursor: hand;
 }
 
 #display-panel {
@@ -169,7 +165,7 @@ hr {
 }
 
 .hidden {
-  display: hidden;
+  visibility: hidden;
 }
 
 .options-box {
