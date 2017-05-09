@@ -429,7 +429,7 @@ $(document).ready(function() {
   var mapsScriptElem = document.createElement('script');
   mapsScriptElem.type = 'text/javascript';
   mapsScriptElem.onerror = mapError;
-  mapsScriptElem.src = 'https://ma22ps.googleapis.com/maps/api/js?libraries=places&key=' +
+  mapsScriptElem.src = 'https://maps.googleapis.com/maps/api/js?libraries=places&key=' +
                         maps_api_key + '&callback=viewModel.init';
   mapsScriptElem.async;
   mapsScriptElem.defer;
