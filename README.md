@@ -1,5 +1,3 @@
-
-
 # Map Search
 
 Map Search is a project that uses the [Google Maps API](https://developers.google.com/maps/), 
@@ -57,4 +55,3 @@ Wikipedia articles and photos from flickr.
 ### License
 
 This project is released under the [MIT License](https://github.com/lmitchell4/alpha-blog/blob/master/LICENSE).
-
