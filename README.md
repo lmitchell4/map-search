@@ -34,7 +34,7 @@ replace the phrase YOUR-MAPS-API-KEY-HERE in the script tag at the bottom
 of the file `index.html`, which looks like this:
 
     
-    <script async defers src="https://maps.googleapis.com/maps/api/js?libraries=places&key=YOUR-MAPS-API-KEY-HERE&callback=viewModel.init">
+    <script async defers src="https://maps.googleapis.com/maps/api/js?libraries=places&key=YOUR-MAPS-API-KEY-HERE&callback=viewModel.init"></script>
     
 
 To get a flickr API key, follow the instructions 
