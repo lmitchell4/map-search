@@ -24,7 +24,7 @@ h1 {
 }
 
 hr {
-  background: #D0D7D9;
+  background: #d0d7d9;
   height: 1px;
   margin: 20px 0 20px 0;
   border: none;
@@ -55,7 +55,7 @@ hr {
 
 #listings-list a:hover {
   cursor: pointer;
-  color: #9400D3;
+  color: #9400d3;
   text-decoration: none;
 }
 
@@ -85,7 +85,7 @@ hr {
 .rsc-btn {
   width: 210px;
   font-size: 16px;
-  color: #9400D3;
+  color: #9400d3;
   background: #fff;
   border: 1px solid #999;
   border-radius: 8px;
@@ -97,7 +97,7 @@ hr {
   cursor: pointer;
   text-decoration: none;
   color: #fff;
-  background: #9400D3;
+  background: #9400d3;
 }
 
 #rsc-container {
