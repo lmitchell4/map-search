@@ -33,9 +33,9 @@ requires the **places** library. Once you have your API key, use it to
 replace the phrase YOUR-MAPS-API-KEY-HERE in the script tag at the bottom 
 of the file `index.html`, which looks like this:
 
-    ```
+    
     <script async defers src="https://maps.googleapis.com/maps/api/js?libraries=places&key=YOUR-MAPS-API-KEY-HERE&callback=viewModel.init">
-    ```
+    
 
 To get a flickr API key, follow the instructions 
 [here](https://www.flickr.com/services/api/misc.api_keys.html). 
@@ -46,9 +46,9 @@ replace the phrase YOUR-FLICKR-API-KEY-HERE with your key, leaving the
 double quotes so that your key is defined as a string. The line in that 
 file looks like this:
 
-    ```
+    
     var flickr_api_key = "YOUR-FLICKR-API-KEY-HERE";
-    ```
+    
 
 
 ### Running the Site Locally
