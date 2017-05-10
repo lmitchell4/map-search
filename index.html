@@ -45,8 +45,8 @@
             <div class="row">
               <div class="col-xs-12 padding-none no-pad">
                 <div data-bind="css: mapStatus" id="map">
-                  <h3 data-bind="css: mapErrorStatus" class="error">Unfortunately, we were unable to load Google Maps.</h3>
-                  <h3 data-bind="css: mapErrorStatus" class="error">Please try again later.</h3>
+                  <h3 data-bind="css: mapErrorStatus">Unfortunately, we were unable to load Google Maps.</h3>
+                  <h3 data-bind="css: mapErrorStatus">Please try again later.</h3>
                 </div>
               </div>
             </div>
@@ -114,6 +114,6 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="js/api_keys.js" defer></script>
     <script src="js/script.js" defer></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=YOUR-MAPS-API-KEY-HERE&callback=viewModel.init"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=YOUR-MAPS-API-KEY-HERE&callback=viewModel.init" onerror="mapError()"></script>
   </body>
 </html>
