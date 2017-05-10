@@ -435,14 +435,3 @@ var viewMap = new viewMapConstructor();
 var viewModel = new ViewModelConstructor();
 ko.applyBindings(viewModel);
 
-
-// Create and load script element to call Google Maps API:
-$(document).ready(function() {
-  var mapsScriptElem = document.createElement('script');
-  mapsScriptElem.onerror = mapError;
-  mapsScriptElem.async = true;
-  mapsScriptElem.defer = true;
-  mapsScriptElem.src = 'https://maps.googleapis.com/maps/api/js?libraries=places&key=' +
-                        maps_api_key + '&callback=viewModel.init';
-  document.getElementsByTagName('head')[0].appendChild(mapsScriptElem);
-});
